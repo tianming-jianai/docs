@@ -1,20 +1,20 @@
 {
   "name": "vuepress-starter",
   "version": "1.0.0",
-  "description": "",
+  "description": "vuepress blog",
   "main": "index.js",
-  "directories": {
-    "doc": "docs"
+  "repository": "https://github.com/tianming-jianai/docs.git",
+  "author": "zsg1001 <1724473740@qq.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@vuepress/plugin-container": "^2.0.0-beta.43",
+    "@vuepress/plugin-search": "^2.0.0-beta.43",
+    "element-ui": "^2.15.8",
+    "vuepress": "^2.0.0-beta.43",
+    "vuepress-plugin-demo-container": "^0.2.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-	"dev": "vuepress dev docs",
-	"build": "vuepress build docs"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "vuepress": "^1.9.7"
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
   }
 }

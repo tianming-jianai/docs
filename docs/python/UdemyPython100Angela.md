@@ -14,6 +14,12 @@ tags:
 > 2. 学习英语
 > 3. 国际化视野
 
+[课件资料](#)
+<div style="display: none;">
+https://koudaizy.lanzouq.com/b01jdvdve
+密码：e54p
+</div>
+
 2022-5-1
 
 ## What you're going to get from this course
