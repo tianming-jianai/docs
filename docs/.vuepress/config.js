@@ -1,6 +1,8 @@
 const { defaultTheme } = require('@vuepress/theme-default')
 const { searchPlugin } = require('@vuepress/plugin-search')
-const { containerPlugin } = require('@vuepress/plugin-container')
+const { backToTopPlugin } = require('@vuepress/plugin-back-to-top')
+const { registerComponentsPlugin } = require('@vuepress/plugin-register-components') // 根据组件文件或目录自动注册 Vue 组件
+const { path } = require('@vuepress/utils')
 
 module.exports = {
     lang: 'zh-CN',
@@ -28,10 +30,10 @@ module.exports = {
                     {
                         text: '官方站点',
                         children: [
-                            { text: 'Vue', link: 'https://v3.cn.vuejs.org/', target: '_self' },
-                            { text: 'Vue Rouiter', link: 'https://router.vuejs.org/zh/', target: '_self' },
+                            { text: 'Vue3', link: 'https://v3.cn.vuejs.org/guide/introduction.html', target: '_self' },
+                            { text: 'Vue Rouiter4', link: 'https://router.vuejs.org/zh/introduction.html', target: '_self' },
                             { text: 'VuePress2', link: 'https://v2.vuepress.vuejs.org/zh/', target: '_self' },
-                            { text: 'Element UI', link: 'https://element.eleme.io/#/zh-CN', target: '_self' }
+                            { text: 'Element Plus', link: 'https://element.eleme.io/#/zh-CN', target: '_self' }
                         ]
                     },
                     {
@@ -51,8 +53,6 @@ module.exports = {
                 ]
             }
         ],
-        // sidebar: 'auto',
-        // searchMaxSuggestions: 10,
         lastUpdatedText: '上次更新',
         contributorsText: '贡献者'
     }),
@@ -60,8 +60,9 @@ module.exports = {
         searchPlugin({
             hotKeys:['s','/']
         }),
-        containerPlugin({
+        registerComponentsPlugin({
             // 配置项
+            componentsDir: path.resolve(__dirname, './components'),
         }),
     ],
     markdown: {
@@ -72,6 +73,5 @@ module.exports = {
             level:[2,3]
         }
     },
-    evergreen: true, // 不转义到ES5
 
 }

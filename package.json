@@ -7,11 +7,13 @@
   "author": "zsg1001 <1724473740@qq.com>",
   "license": "MIT",
   "devDependencies": {
-    "@vuepress/plugin-container": "^2.0.0-beta.43",
+    "@element-plus/icons-vue": "^1.1.4",
+    "@vuepress/plugin-back-to-top": "^2.0.0-beta.43",
+    "@vuepress/plugin-register-components": "^2.0.0-beta.43",
     "@vuepress/plugin-search": "^2.0.0-beta.43",
-    "element-ui": "^2.15.8",
-    "vuepress": "^2.0.0-beta.43",
-    "vuepress-plugin-demo-container": "^0.2.0"
+    "axios": "^0.27.2",
+    "element-plus": "^2.1.11",
+    "vuepress": "^2.0.0-beta.43"
   },
   "scripts": {
     "docs:dev": "vuepress dev docs",

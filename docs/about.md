@@ -2,6 +2,7 @@
 navbar: false
 sidebar: auto
 # title: 关于我1 # 侧边栏标题
+prev: /
 ---
 
 # 关于我
@@ -76,3 +77,15 @@ aaa
 ::: details
 这是一个 details 标签
 :::
+
+## Element Plus
+
+
+<el-button type="primary" :icon="Edit">我是Element-Plus</el-button>
+
+<elbtn></elbtn>
+
+
+## 引入自定义组件
+
+<Test></Test>
