@@ -40,6 +40,7 @@ module.exports = {
                         text:'插件',
                         children:[
                             { text: 'vuepress2 container', link: 'https://www.cjsound.cn/vuepress2-plugin/'},
+                            { text: 'Emoji', link: 'https://github.com/ikatyang/emoji-cheat-sheet'},
                             
                         ]
                     },

@@ -1,5 +1,7 @@
 # Docker
 
+[docker中文社区,docker帮助,docker手册,docker教程,docker安装手册](https://www.docker.org.cn/)
+
 ## 认识 Docker
 
 ### Docker的思想
@@ -44,6 +46,18 @@ systemctl enable docker
 docker run hello-world
 ```
 
+- 配置镜像
+```bash
+vim /etc/docker/daemon.json
+{
+  "debug" : true,
+  "experimental" : true,
+  "registry-mirrors" : [
+    "https://docker.mirrors.ustc.edu.cn",
+    "https://registry.docker-cn.com"
+  ]
+}
+```
 ### 镜像的操作
 
 ```bash
@@ -218,7 +232,7 @@ docker-compose logs -f
 
 ```bash
 # 运行mysql容器
-docker run -d -p 3306:3306 --name mysql -e MYSQL_ROOT_PASSWORD=root daocloud.io/library/mysql:5.7.4
+docker run -itd --name mysql-test -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 mysql
 ```
 
 - Tomcat
@@ -232,8 +246,6 @@ docker cp 文件名称 容器id:容器内部路径
 #举个栗子
 docker cp ssm.war fe:/usr/local/tomcat/webapps/
 ```
-
-
 
 ## Docker 容器备份
 
