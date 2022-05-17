@@ -24,8 +24,8 @@
 
 | 在线文档                                                     |
 | ------------------------------------------------------------ |
-| [ES5：JavaScript 教程](https://wangdoc.com/javascript/) - 廖雪峰 |
-| [ES6 标准入门](https://wangdoc.com/es6/) - 廖雪峰 :thumbsup: |
+| [ES5：JavaScript 教程](https://wangdoc.com/javascript/) - 阮一峰 |
+| [ES6 标准入门](https://wangdoc.com/es6/) - 阮一峰 :thumbsup: |
 | [代码整洁的 JavaScript](https://www.bookstack.cn/read/clean-code-javascript-zh/README.md) |
 | [JavaScript 模式](https://www.bookstack.cn/read/javascript.patterns/README.md) |
 | [JavaScript中的设计模式](https://www.bookstack.cn/read/design-pattern-in-javascript/README.md) |

@@ -14,16 +14,12 @@
 
 - Java 经典图书 
 
-|                                                              |
+| [Effective Java 第三版](https://www.bookstack.cn/books/effective-java-3rd-chinese) :book: |
 | ------------------------------------------------------------ |
-|                                                              |
-|                                                              |
-|                                                              |
-| [Effective Java 第三版](https://www.bookstack.cn/books/effective-java-3rd-chinese) |
-| Java并发编程实战 [并发编程之美](https://www.bookstack.cn/books/java-concurrency-note) |
+| Java并发编程实战 [并发编程之美](https://www.bookstack.cn/books/java-concurrency-note):book: |
 | [写给大忙人的Java SE 核心技术](https://pan.baidu.com/)       |
-| [写给大忙人的Java SE 8核心技术](https://pan.baidu.com/)      |
-| [写给大忙人的Java SE 9核心技术](https://pan.baidu.com/)      |
+| [写给大忙人的Java SE 8核心技术](https://pan.baidu.com/):book: |
+| [写给大忙人的Java SE 9核心技术](https://pan.baidu.com/):book: |
 |                                                              |
 |                                                              |
 |                                                              |
@@ -44,4 +40,8 @@
 |                                                              |
 |                                                              |
 |                                                              |
+
+
+
+## 卸载JDK8 安装JDK 17
 

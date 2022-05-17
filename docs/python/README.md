@@ -4,7 +4,7 @@ next: /python/env
 ---
 # Python
 
-“Monty Python 飞行马戏团”
+“Monty Python 飞行马戏团” **Not** 蟒蛇
 
 [Python 官网](https://docs.python.org/zh-cn/3.9/tutorial/index.html)
 
@@ -16,14 +16,13 @@ next: /python/env
 |   [Python Cookbook 3](https://python3-cookbook.readthedocs.io/zh_CN/latest/)|
 |   [Python最佳实践指南！](https://pythonguidecn.readthedocs.io/zh/latest/) - O'Reilly  |
 
+## Python 教程
 
+- website
 
+[w3school Python 教程](https://www.w3school.com.cn/python/index.asp)
 
-
-
-
-
-## Python 视频教程
+- video
 
 [Udemy Python 100 Bootcamp](./UdemyPython100Angela.md)
 
@@ -64,7 +63,7 @@ next: /python/env
 | nltk          | 自然语言工具包                                               |
 | lPython       | Python的提示信息。包括完成信息、历史信息、shell功能，以及其他很多很多方面 |
 | BeautifulSoup | xml和html的解析库，对于新手非常有用                          |
-|               |                                                              |
+| mypy          | **mypy** 库来检验最终代码是否符合注解                        |
 |               |                                                              |
 
 
