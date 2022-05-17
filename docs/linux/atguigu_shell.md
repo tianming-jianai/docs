@@ -1,5 +1,5 @@
 ---
-prev: /linux/linux.md
+prev: /linux/atguigu_linux.md
 next: /
 ---
 

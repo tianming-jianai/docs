@@ -1,3 +1,10 @@
+---
+prev: /
+next: /linux/atguigu_linux
+---
+
+
+
 # Linux
 
 ## Linux 基础知识
