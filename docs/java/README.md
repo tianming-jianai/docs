@@ -43,7 +43,7 @@
 
 
 
-# 卸载JDK8 安装JDK 17
+## 卸载JDK8 安装JDK 17
 
 - 卸载JDK8
 
@@ -65,5 +65,33 @@ yum list java-17-openjdk
 yum install -y java-17-oepnjdk
 # 测试jdk是否被安装
 java --version
+```
+
+> OpenJDK 缺少很多使用工具：jstack、jps
+
+- 安装OracleJDK17
+
+[下载](https://www.oracle.com/java/technologies/downloads/#java17) [官方指导](https://docs.oracle.com/en/java/javase/17/install/installation-jdk-linux-platforms.html)
+
+```bash
+# 下载RPM包，wget很慢，字节下载到本地，然后上传
+wget https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.rpm
+scp .\jdk-17_linux-x64_bin.rpm root@ip:/java/package
+```
+
+Upgrade the required package using the following command:
+
+```
+$ rpm -Uvh jdk-17.interim.update.patch_linux-x64_bin.rpm
+```
+
+Delete the `.rpm` file if you want to save disk space.
+
+Exit the root shell.   It is not required to reboot.
+
+In addition, users can check which specific RPM package provides the `java` files:
+
+```
+Copy$ rpm -q --whatprovides java
 ```
 
