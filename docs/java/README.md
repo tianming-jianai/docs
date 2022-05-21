@@ -43,5 +43,27 @@
 
 
 
-## 卸载JDK8 安装JDK 17
+# 卸载JDK8 安装JDK 17
+
+- 卸载JDK8
+
+```bash
+# 查看安装了哪些jdk安装包
+rpm -qa | grep jdk
+# 逐个卸载安装包
+rpm -e --nodeps java-1.8.0-openjdk-1.8.0.312.b07-2.el8_5.x86_64
+rpm -e --nodeps java-1.8.0-openjdk-headless-1.8.0.312.b07-2.el8_5.x86_64
+rpm -e --nodeps nodeps copy-jdk-configs-4.0-2.el8.noarch
+# 测试jdk是否被卸载
+java --version
+```
+
+- 安装JDK17
+
+```bash
+yum list java-17-openjdk
+yum install -y java-17-oepnjdk
+# 测试jdk是否被安装
+java --version
+```
 

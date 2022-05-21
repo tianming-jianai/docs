@@ -260,9 +260,115 @@ VMware虚拟机安装
 
 ## 九、软件包管理
 
+### RPM
+
+#### RPM概述
+
+RPM（RedHat Package Manager）
+
+RPM包的名称格式：Apache-1.3.23-11.i386.rpm
+
+软件名称-软件版本号.软件所运行的硬件平台.rpm文件扩展名
+
+#### 常用参数
+
+```bash
+-a 　查询所有套件。
+-i<套件档>或--install<套件档> 　安装指定的套件档
+-q 　使用询问模式，当遇到任何问题时，rpm指令会先询问用户
+--clean 　完成套件的包装后，删除包装过程中所建立的目录。
+--nodeps 　不验证套件档的相互关联性。
+
+```
+
+
+
+#### RPM查询命令
+
+```bash
+rpm -qa | grep kernel # 查找相应文件
+rpm -qi kernel # 查询软件包详细信息
+```
+
+#### RPM卸载命令
+
+```bash
+rpm -e RPM安装包 # 卸载软件包
+rpm -e --nodeps 软件包 # 卸载软件时，不检查依赖。这样的话，那些使用该软件包的软件在此之后可能就不能正常工作了
+```
+
+#### RPM安装命令
+
+```bash
+rpm -ivh RPM包全名
+# -i install安装
+# -v --verbose 显示详细信息
+# -h --hash 进度条
+# --nodeps 安装前不检查依赖
+```
+
+### yum 仓库配置
+
+#### yum概述
+
+yum（Yellow dog Updater,Modified）
+是一个在Fedora和RedHat以及CentOS中的Shell前端软件包管理器
+
+基于RPM包管理器，能够从指定的服务器**自动下载RPM包并且安装**，可以**自动处理依赖关系**
+并且**一次安装**所有依赖的软件包，无须繁琐地一次次下载、安装
+
+#### yum常用命令
+
+```bash
+yum [选项] [参数]
+yum -y install firefox
+```
+
+- 选项
+
+```bash
+-y # 对所有提问都回答yes
+```
+
+- 参数
+
+```bash
+install # 安装rpm软件包
+update # 更新rpm安装包
+check-update # 检查是否有可用的rpm软件包
+remove # 删除指定的rpm软件包
+list # 显示软件包信息
+clean # 清理yum过期的缓存
+deplist # 显示yum软件包的所有依赖关系
+```
+
+#### 修改yum软件源
+
+1）安装wget用来从指定的URL下载文件 
+
+```bash
+yum install wget
+```
+
+2）在/etc/yum.repos.d/目录下，备份默认的repos文件
+
+```bash
+cp CentOS-Base.repo CentOS-Base.repo.backup
+```
+
+3）下载163或阿里云的repos文件，任选其一
+
+```bash
+wget http://mirrors.aliyun.com/repo/Centos-7.repo
+wget http://mirrors.163.com/.help/CentOS7-Base-163.repo
+```
+
 
 
 ## 十、克隆虚拟机
+
+```bash
+```
 
 
 

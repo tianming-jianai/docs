@@ -6,7 +6,6 @@ next: /guide/
 
 - build your logo: https://www.logoko.com.cn/
 
-:star:
 
 
-<calendar></calendar>
+

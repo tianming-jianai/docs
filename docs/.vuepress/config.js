@@ -65,14 +65,6 @@ module.exports = {
             // 配置项
             componentsDir: path.resolve(__dirname, './components'),
         }),
-    ],
-    markdown: {
-        code:{
-            lineNumbers: true,
-        },
-        extractHeaders: {
-            level:[2,3]
-        }
-    },
+    ]
 
 }

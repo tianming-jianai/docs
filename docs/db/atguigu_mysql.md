@@ -10,6 +10,8 @@
 >
 > FILE：[初级](F:\STU\itcast\尚硅谷mysql高级\初级\课件pdf版\课件) [高级](F:\STU\itcast\尚硅谷mysql高级\高级\参考课件（供实操参考）)
 
+> 学习技巧：大处着眼、小处着手
+
 ## 学习进度
 
 - 每天10节课打底
@@ -20,7 +22,8 @@
 | :--------: | :------: | :------------------: | :------: |
 | 2022-05-16 |  P1~P5   | 21:42~23:20  1h40min |  5-17,   |
 | 2022-05-17 |  P6~P10  | 20:04~22:33 2h29min  |          |
-|            |          |                      |          |
+| 2022-05-18 | P11~P14  | 21:00~24:00 1h20min  |          |
+| 2022-05-20 | P15~P18  |  22:30~次日00:38 1h  |          |
 
 ## 测验
 
@@ -373,4 +376,474 @@ flush privileges;
 ```
 
 ### MySQL目录结构与源码
+
+|      |      |
+| ---- | ---- |
+|      |      |
+|      |      |
+|      |      |
+
+MySQL主要开发语言是C++
+
+### 常见问题解决（课外内容）
+
+- 问题1：root用户密码忘记，重置的操作
+
+- 问题2：mysql命令报“不是内部或外部命令”
+
+  环境变量没配对
+
+- 问题3：ERROR： No database selected
+
+  use dbname;
+
+- 问题4：命令行客户端字符集问题
+
+  设置当前连接的客户端字符集 mysql> set names gbk;
+
+- 问题5：修改数据库和表的[字符集编码](#MySQL演示使用)
+
+
+
+## 第一章、第二章课后练习
+
+- **第一章**
+
+1. 说说你了解的常见的数据库
+
+2. 谈谈你对MySQL历史、特点的理解
+
+   历史：瑞典MySQL AB -> SUN -> Oracle
+
+   特点：开源、关系型、支持千万级别存储
+
+3. 说说你对DB、DBMS、SQL的理解
+
+4. 你知道哪些非关系型数据库的类型？
+
+5. 表与表的记录之间存在哪些关联关系？
+
+   一对一、一对多、多对多、自关联
+
+- **第二章**
+
+1. 安装好MySQL之后再windows系统中哪些位置能看到MySQL？
+2. 卸载MySQL主要卸载哪几个位置的内容？
+3. 能够独立完成MySQL8.0、MySQL5.7版本的下载、安装、配置
+4. MySQL5.7 在配置完以后，如何修改配置文件
+5. 熟悉常用的数据库管理和操作的工具
+
+## 第三章：基本的SELECT语句
+
+- 不同数据库生产厂商都支持SQL语句，但都有特有内容
+- SQL规范
+  - MySQL特有（方言）
+  - Oracle特有（方言）
+
+### SQL 分类
+
+- DDL 数据定义语言
+  - CREATE | ALTER | DROP | RENAME | TRUNCATE
+- DML 数据操作语言
+  - INSERT | DELETE | UPDATE | SELECT
+- DCL 数据控制语言
+  - COMMIT | ROLLBACK | SAVEPOINT | GRANT | REVOKE
+
+### SQL 语言的规则与规范
+
+规则：必须遵守
+
+规范：建议遵守
+
+**基本规则**
+
+- 执行单个SQL可不写分号，执行多个SQL必须以分号区分
+- 数据使用单引号，列的别名使用双引号，不建议省略as
+
+**SQL大小写规范**
+
+- windows不敏感、linux敏感
+- 推荐：数据库名、表名、字段名、别名小写，关键字、函数名、变量大写
+
+**注释**
+
+- 单行注释：#  |  -- 空格
+- 多行注释：/* */
+
+**命名规则**
+
+TODO
+
+**数据导入指令**
+
+1）source 文件全路径名（路径中不能有中文）
+
+```mysql
+source D:\mysqldb.sql
+```
+
+2）图形化界面导入SQL文件
+
+
+
+### 基本的SELECT语句
+
+```sql
+select 1; -- 没有任何子句
+select 9/12; -- 没有任何子句
+select ... from ...; # dual 伪表
+select * from ...; # * 表中所有字段（或列）
+# 查询结果：结果集
+```
+
+- 列的别名
+
+```mysql
+# as alias 可以省略
+# 别名可以用中文
+# 别名可以用一对 "" 一起来，不要使用 ‘’
+select employee_id emp_id,last_name as lname,department_id "部门id",salary * 12 "annual sal" from employees;
+```
+
+- 去除重复行
+
+```mysql
+select distinct department_id from employees;
+# 仅仅没有报错，但是没有实际意义
+select distinct department_id,salary from employees; -- 74
+```
+
+- 空值运算
+
+```mysql
+# 空值 null
+# null 不等同于 0, '' , 'null'
+# 有些人的年工资为 NULL
+select employee_id,salary "月工资", salary*(1+ commission_pct)*12 "年工资" from employees;
+# 引入问题解决方案：IFNULL
+select employee_id,salary "月工资", salary *(1+IFNULL(commission_pct,0))*12 "年工资" from employees;
+```
+
+- 着重号 ``
+
+```mysql
+# 表名与保留字冲突
+select * from `order`;
+```
+
+- 查询常数
+
+```mysql
+select '尚硅谷',123,last_name from employees;
+```
+
+- 显示表结构
+
+```mysql
+# 显示了表中字段的详细信息
+describe employees;
+# 同
+desc employees;
+```
+
+### 过滤数据
+
+```mysql
+# 90号部门员工
+select * from employees where department_no = 90;
+# last_name 为 ‘King’ 的员工
+select * from employees where last_name = 'King';
+```
+
+也能查出来 :thumbsdown:，MySQL自身的问题，Oracle就可以区分查询参数的大小写
+
+```mysql
+select * from employees where last_name = 'King';
+```
+
+## 第三章课后练习
+
+1. 员工12个月工资和，取别名ANNUAL SALARY
+2. employees去重job_id
+3. 工资大于120000，员工姓名、工资
+4. 工号176，姓名、部门号
+5. departments表结构
+
+## 第四章：运算符
+
+### 算数运算符
+
+`+ - * / div % mod`
+
+整数加减还是整数
+
+有浮点数参与运算结果就是浮点数
+
+MySQL种`+`表示数值相加，如果遇到非数值，先尝试转换成数值，如果转换失败，就按0计算。:star:
+
+MySQL拼接字符串要使用`concat()`实现
+
+除法结果带小数点
+
+取模结果正负值看被模数
+
+```mysql
+select 100 + '1'; -- 101
+select 100 + 'a'; -- 100
+select 100 + NULL; -- NULL
+select 100 / 0; -- NULL
+select 100 / 2; -- 50.0000
+select 100 % 5; -- 0
+select -100 % -3; -- -1
+```
+
+
+
+### 比较运算符
+
+### 逻辑运算符
+
+### 位运算符
+
+### 运算符的优先级
+
+### 拓展：使用正则表达式查询
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
+
+
+
+```mysql
+
+```
 

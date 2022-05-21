@@ -46,3 +46,17 @@
 
 
 
+## Node.js npm 包
+
+| 名称      | 作用                                             |
+| --------- | ------------------------------------------------ |
+| express   | 最流行、最快速、最简约的 node.js 后端 Web 框架   |
+| dayjs     | 极简，解析、验证、操作和显示日期和时间           |
+| validator | 字符串验证器和清理器库                           |
+| jest      | JavaScript 测试解决方案                          |
+| nodemon   | 检测到目录中的文件更改时自动重新启动节点应用程序 |
+
+[30 个有用的 Node.js NPM 包](https://my.oschina.net/u/5079097/blog/5214364) - 2021-08-31
+
+[23 个非常有用的 NodeJs 库](https://jishuin.proginn.com/p/763bfbd74c32) - 2022-03-04
+
