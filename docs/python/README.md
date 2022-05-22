@@ -75,3 +75,6 @@ next: /python/env
 [2022 学习路线](https://blog.csdn.net/u011367482/article/details/124314829#commentBox)
 
 [基础习题（300题）](https://blog.csdn.net/m0_54355125/article/details/120837304)
+
+[Python入门资料整学习路线](https://mp.weixin.qq.com/s/QUUYEimknwt5v3RUxIf8kQ)
+
