@@ -484,9 +484,9 @@ graph TB
 					message:'你好'
 				},
 				methods: {}
-            })
-        </script>
-    </code>
+	        })
+	    </script>
+	</code>
 </details>
 -->
 ## 注册组件步骤解析
