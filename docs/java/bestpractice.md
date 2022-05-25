@@ -28,3 +28,38 @@ yum install java-11-openjdk
 java -version
 ```
 
+
+
+## jasypt 加密SpringBoot配置信息
+
+[参考](https://www.jianshu.com/p/71c2205f0c2a)
+
+```xml
+<dependency>
+    <groupId>com.github.ulisesbocchio</groupId>
+    <artifactId>jasypt-spring-boot-starter</artifactId>
+    <version>2.1.2</version>
+</dependency>
+```
+
+```yaml
+#jasypt加密的密匙
+jasypt:
+  encryptor:
+    password: EbfYkitulv73I2p0mXI50JMXoaxZTKJ7
+```
+
+```java
+@Autowired
+StringEncryptor stringEncryptor;
+@Test
+void testJasypt(){
+    String encrypt = stringEncryptor.encrypt("m123");
+    System.out.println(encrypt);
+}
+```
+
+```yaml
+spring.datasource.password=ENC(caCSoLhToaPqpquknipDOg==)
+```
+
