@@ -2,6 +2,10 @@
 
 [Getting started | IntelliJ IDEA (jetbrains.com)](https://www.jetbrains.com/help/idea/getting-started.html)
 
+## idea 激活
+
+[教程](http://blog.idejihuo.com/topics/jetbrains) [激活码](http://jets.idejihuo.com/)
+
 ## 创建代码片段
 
 1. 位置：File->Settings->Editor->Live Templates    添加Live template
