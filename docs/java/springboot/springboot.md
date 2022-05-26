@@ -8,7 +8,7 @@
 >
 > VIDEO：[BiliBili](https://www.bilibili.com/video/BV15b4y1a7yG)
 >
-> FILE：[初级](F:\STU\itcast\尚硅谷mysql高级\初级\课件pdf版\课件) [高级](F:\STU\itcast\尚硅谷mysql高级\高级\参考课件（供实操参考）)
+> FILE：
 
 > 废寝忘食
 >
@@ -30,7 +30,7 @@
 |    日期    | 课程编号 |    学习时长     | 复习时间 |
 | :--------: | :------: | :-------------: | :------: |
 | 2022-05-25 |  P1~P12  | 18:30~20:30  2h |          |
-|            |          |                 |          |
+| 2022-05-26 | P13~P21  | 14:40~16:40  2h |          |
 |            |          |                 |          |
 |            |          |                 |          |
 
@@ -171,7 +171,7 @@ SpringBoot是由Pivotal团队提供的全新框架，其设计目的是用来`�
 - 引导类
 - 内嵌tomcat
 
-#### parent
+### parent
 
 ![image-20220525194846290](../img/image-20220525194846290.png)
 
@@ -182,7 +182,7 @@ SpringBoot是由Pivotal团队提供的全新框架，其设计目的是用来`�
 3. 继承parent模块可以`避免`多个依赖使用相同技术时出现`依赖`版本`冲突`
 4. 继承parent的形式也可以采用引入依赖的形式实现效果
 
-#### starter
+### starter
 
 spring-boot-starter-web.pom
 
@@ -206,7 +206,7 @@ spring-boot-starter-web.pom
 
 > startr parent 解决的是配置问题
 
-#### 引导类
+### 引导类
 
 - 启动方式
 
@@ -231,7 +231,7 @@ public class Spring0101QuickstartApplication {
 1. SpringBoot工程提供引导类用来启动程序
 2. SpringBoot工程启动后创建并初始化Spring容器
 
-#### 内嵌tomcat
+### 内嵌tomcat
 
 - 排除Tomcat 引入 Jetty
 
@@ -279,7 +279,7 @@ public class Spring0101QuickstartApplication {
 - REST快速开发
 - 案例:基于RESTful页面数据交互
 
-#### REST 简介
+### REST 简介
 
 - REST (Representational State Transfer)，表现形式状态转换
 
@@ -319,3 +319,258 @@ public class Spring0101QuickstartApplication {
 1. REST
 2. 动作4个
 3. RESTful
+
+### RESTful 入门案例
+
+1. 设定请求动作（动词）
+2. 设定请求参数（路径变量）
+
+```java
+@Controller
+public class UserController {
+
+    @RequestMapping(value = "/users", method = RequestMethod.POST)
+    public String save() {
+        System.out.println("user save ...");
+        return "{'module':'user save'}";
+    }
+
+    @RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE)
+    public String delete(@PathVariable("id") Integer id) {
+        System.out.println("user delete ..." + id);
+        return "{'module':'user delete'}";
+    }
+
+    @RequestMapping(value = "/users", method = RequestMethod.PUT)
+    public String update(@RequestBody User user) {
+        System.out.println("user save ..." + user);
+        return "{'module':'user update'}";
+    }
+
+    @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
+    public String getById(@PathVariable("id") Integer id) {
+        System.out.println("user getById ..." + id);
+        return "{'module':'user getById'}";
+    }
+
+    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    public String getAll() {
+        System.out.println("user getAll ...");
+        return "{'module':'user getAll'}";
+    }
+}
+```
+
+### @RequestBody @RequestParam @PathVariable
+
+- 区别
+  - @RequestParam用于接收url地址传参或表单传参
+  - @RequestBody用于接收json数据
+  - @PathVariable用于接收路径参数，使用{参数名称}描述路径参数
+- 应用
+  - 后期开发中，发送请求参数超过1个时，以json格式为主，@RequestBody应用较广
+  - 如果发送非json格式数据，选用@RequestParam接收请求参数
+  - 采用RESTful进行开发，当参数数量较少时，例如1个，可以采用@PathVariable接收请求路径变量，通常用于传递id值
+
+### RESTful 快速开发
+
+```java
+@RestController
+@RequestMapping("/books")
+public class BookController {
+
+    @PostMapping
+    public String save() {
+        System.out.println("book save ...");
+        return "{'module':'book save'}";
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable("id") Integer id) {
+        System.out.println("book delete ..." + id);
+        return "{'module':'book delete'}";
+    }
+
+    @PutMapping
+    public String update(@RequestBody Book book) {
+        System.out.println("book save ..." + book);
+        return "{'module':'book update'}";
+    }
+
+    @GetMapping("/{id}")
+    public String getById(@PathVariable("id") Integer id) {
+        System.out.println("book getById ..." + id);
+        return "{'module':'book getById'}";
+    }
+
+    @GetMapping
+    public String getAll() {
+        System.out.println("book getAll ...");
+        return "{'module':'book getAll'}";
+    }
+}
+```
+
+**小结**
+
+1. RESTful快速开发（标准开发）
+2. @RestController
+3. 标准请求动作映射（4种）
+
+## 基础配置
+
+- 属性配置
+- 配置文件分类
+- yaml文件
+- yaml数据读取
+
+### 教你一招：复制工程
+
+- 原则
+  - 保留工程基础结构
+  - 抹掉原始工程痕迹
+
+**小结**
+
+1. 在工作空间中复制对应工程，并修改工程名称
+2. 删除与Idea相关配置文件，仅保留src目录与pom. xml文件
+3. 修改pom. xm1文件中的artifactId与新工程/模块名相同
+4. 删除name标签(可选)
+5. 保留备份工程供后期使用
+
+### 属性配置
+
+- 修改服务端口
+
+- SpringBoot默认配置文件application. properties,通过键值对配置对应属性
+
+  ```properties
+  server.port=80
+  ```
+
+```properties
+# 服务器端口配置
+server.port=80
+
+# 修改banner
+#spring.main.banner-mode=off
+#spring.banner.image.location=logo.png
+
+# 日志
+logging.level.root=info
+logging.level.com.itheima=warn
+```
+
+
+
+- SpringBoot内置属性查询
+
+官方文档中参考文档第一项: Application Properties
+
+[SpringBoot所有配置](https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html)
+
+**小结**
+
+- SpringBoot中导入对应starter后，提供对应配置属性
+- 书写SpringBoot配置采用关键字+提示形式书写
+
+
+
+**SpringBoot提供了多种属性配置方式**
+
+SpringBoot提供了3种配置文件的格式
+
+- properties (传统格式/默认格式)
+- `yml (主流格式)`
+- yaml
+
+### 配置文件加载优先级
+
+`.properties > .yml > yaml`
+
+不同配置文件中相同配置按照加载优先级相互覆盖，不同配
+置文件中不同配置全部保留
+
+
+
+### 自动提示功能消失解决方案
+
+1. 指定SpringBoot配置文件
+   - Setting  →  Project Structure  →  Facets
+   - 选中对应项目/工程
+   - Customize Spring Boot
+   - 选择配置文件
+
+### yaml
+
+- YAML (YAML Ain't Markup Language) ，-种数据序列化格式
+- 优点:
+  - 容易阅读
+    - 容易与脚本语言交互 .
+    - 以数据为核心, 重数据轻格式
+  - YAML文件扩展名
+    - `.yml (主流)`
+    - . yaml
+
+
+
+**语法规则**
+
+- 大小写敏感
+- 属性层级关系使用多行描述，每行结尾使用冒号结束
+- 使用缩进表示层级关系，同层级左侧对齐，只允许使用空格(不允许使用Tab键)
+- 属性值前面添加空格(属性名与属性值之间使用冒号+空格作为分隔)
+- #表示注释
+
+核心规则：`数据前面要加空格与冒号隔开`
+
+
+
+- 字面值表示方式
+
+![image-20220526163108882](../img/image-20220526163108882.png)
+
+- 数组表示方式
+
+  ```yaml
+  likes:
+    - game
+    - music
+    - sleep
+  
+  likes2: [game,music,sleep]
+  ```
+
+- 对象数组格式
+
+  ```yaml
+  users:
+    - name: zhangsan
+      age: 18
+    - name: lisi
+      age: 17
+  
+  users:
+    - 
+    	name: zhangsan
+      age: 18
+    - 
+    	name: lisi
+      age: 17
+      
+  users2: [{name:zhangsan,age:18},{name:lisi,age:17}]
+  ```
+
+**小结**
+
+1. yaml语法规则
+   - 大小写敏感
+   - 属性层级关 系使用多行描述，每行结尾使用冒号结束
+   - 使用缩进表示层级关系, 同层级左侧对齐,只允许使用空格(不允许
+     使用Tab键)
+   - 属性值前面添加空格( 属性名与属性值之间使用冒号+空格作为分隔)
+   - #表示注释
+2. 注意属性名冒号后面与数据之间有一个空格
+3. 字面值、对象数据格式、数组数据格式(略)
+
+### 读取yaml配置数据
