@@ -4,6 +4,8 @@ next: /guide/
 ---
 # 主页
 
+Always remind yourself that you are a Java programmer, like breathing  and drinking water. 
+
 - build your logo: https://www.logoko.com.cn/
 
 
