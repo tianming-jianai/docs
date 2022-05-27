@@ -31,7 +31,7 @@
 | :--------: | :------: | :-------------: | :------: |
 | 2022-05-25 |  P1~P12  | 18:30~20:30  2h |          |
 | 2022-05-26 | P13~P21  | 14:40~16:40  2h |          |
-|            |          |                 |          |
+| 2022-05-27 | P22~P31  | 15:30~17:30  2h |          |
 |            |          |                 |          |
 
 ## 测验
@@ -117,7 +117,7 @@
 
 ## 基础篇
 
-## 快速上手SpringBoot
+## 01 快速上手SpringBoot
 
 SpringBoot是由Pivotal团队提供的全新框架，其设计目的是用来`简化`Spring应用的`初始搭建`以及`开发过程`
 
@@ -320,6 +320,8 @@ public class Spring0101QuickstartApplication {
 2. 动作4个
 3. RESTful
 
+> DATE：2022-05-25
+
 ### RESTful 入门案例
 
 1. 设定请求动作（动词）
@@ -417,7 +419,7 @@ public class BookController {
 2. @RestController
 3. 标准请求动作映射（4种）
 
-## 基础配置
+## 02 基础配置
 
 - 属性配置
 - 配置文件分类
@@ -573,4 +575,345 @@ SpringBoot提供了3种配置文件的格式
 2. 注意属性名冒号后面与数据之间有一个空格
 3. 字面值、对象数据格式、数组数据格式(略)
 
+> DATE：2022-05-26
+
 ### 读取yaml配置数据
+
+1. **使用@Value读取单个数据，属性名引用方式：`${一级属性名.二级属性名...}`**
+
+```yam
+server:
+  port: 81
+
+country: china
+user:
+  name: zhangsan
+
+likes:
+  - game
+  - music
+  - sleep
+
+likes2: [game,music,sleep]
+
+users:
+  - name: zhangsan
+    age: 18
+  - name: lisi
+    age: 17
+
+users2: [{name:zhangsan,age:18},{name:lisi,age:17}]
+
+baseDir: C:\windows
+tempDir: ${baseDir}\temp
+```
+
+```java
+@RestController
+@RequestMapping("/books")
+public class BookController {
+    // 读取yaml单一数据
+    @Value("${country}")
+    private String country;
+    @Value("${user.name}")
+    private String name;
+    @Value("${likes[1]}")
+    private String likes1;
+    @Value("${users[1].age}")
+    private String age1;
+    @Value("${server.port}")
+    private String port;
+    @Value("${tempDir}")
+    private String tempDir;
+
+    @GetMapping("/{id}")
+    public String getById(@PathVariable("id") Integer id) {
+        System.out.println("book getById ..." + id); // book getById ...1
+        System.out.println("country: " + country); // country: china
+        System.out.println("name: " + name); // name: shiga
+        System.out.println("likes1: " + likes1); // likes1: music
+        System.out.println("age1: " + age1); // age1: 17
+        System.out.println("port: " + port); // port: 80
+        System.out.println("tempDir: " + tempDir); // tempDir: C:\windows\temp
+        return "{'module':'book getById'}";
+    }
+```
+
+**小结**
+
+1. 在配置文件中可以使用${属性名}方式引用属性值
+2. 如果属性出现特殊符号，可以使用`双引号`包裹起来作为字符解析
+
+2. **封装全部数据到Environment对象**
+
+```java
+	@Autowired
+    private Environment env;
+
+    @GetMapping
+    public String getAll() {
+        System.out.println("book getAll ...");
+        System.out.println("port: " + env.getProperty("server.port")); // 80
+        return "{'module':'book getAll'}";
+    }
+```
+
+**小结**
+
+1. 使用Environment对象封装全部配置信息
+2. 使用@Autowired自动装配数据到Environment对象中
+
+
+
+3. **自定义对象封装指定数据**
+
+```yaml
+datasource:
+  driver: com.mysql.cj.jdbc.Driver
+  url: jdbc:mysql://localhost/springboot_db
+  username: root
+  password: root666
+```
+
+```java
+/**
+ * 1. 定义数据模型封装yaml文件中对应的数据
+ * 2. 定义为Spring管控的bean
+ * 3. 指定加载的数据
+ */
+@Data
+@Component
+@ConfigurationProperties(prefix = "datasource")
+public class MyDataSource {
+    private String driver;
+    private String url;
+    private String username;
+    private String password;
+}
+```
+
+```java
+@Autowired
+private MyDataSource myDataSource;
+
+@GetMapping
+public String getAll() {
+    System.out.println("book getAll ...");
+    System.out.println("myDataSource: " + myDataSource);
+    return "{'module':'book getAll'}";
+}
+// myDataSource: MyDataSource(driver=com.mysql.cj.jdbc.Driver, url=jdbc:mysql://localhost/springboot_db, username=root, password=root666)
+```
+
+**小结**
+
+1. 实用@ConfigurationProperties注解绑定撇子信息到封装类中
+2. 封装类需要定义为Spring管理的bean，否则无法进行属性注入
+
+
+
+## 03 整合第三方技术
+
+- 整合JUnit
+- 整合Mybatis
+- 整合MyBatis-Plus
+- 整合Druid
+
+### 整合JUnit
+
+**小结**
+
+1. 导入测试对应的starter
+2. 测试类实用`@SpringBootTest`修饰
+3. 实用自动装配的形式添加要测试的对象
+
+- 名称：@SpringBootTest
+
+- 类型：测试类注解
+
+- 位置：测试类定义上方
+
+- 作用：设置JUnit加载的`SpringBoot启动类`
+
+- 范例：
+
+  ```java
+  @SpringBootTest(classes = SpringBoot04JunitApplication.class)
+  class SpringBootApplicationTests{}
+  ```
+
+- 相关属性
+
+  - classes：设置SpringBoot启动类
+
+注意事项：
+如果测试类在SpringBoot启动类的包或子包中，可以省略启动类配置，也就是省略`classes`的设定
+
+**小结**
+
+1. 测试类如果存在于引导类所在包或子包中无需指定引导类
+2. 测试类如果不存在于引导类所在的包或子包中需要通过classes属性指定引导类
+
+### 整合Mybatis
+
+```mysql
+CREATE TABLE `tbl_book` (
+  `id` int DEFAULT NULL,
+  `type` varchar(50) DEFAULT NULL,
+  `name` varchar(50) DEFAULT NULL,
+  `description` varchar(100) DEFAULT NULL
+)
+```
+
+```java
+@Data
+public class Book {
+    private Integer id;
+    private String type;
+    private String name;
+    private String description;
+}
+```
+
+设置数据源参数
+
+```yaml
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ssm_db
+    username: zhangsan
+    password: 2233
+```
+
+定义数据层接口与映射配置
+
+```java
+@Mapper
+public interface BookDao {
+    @Select("select * from tbl_book where id = #{id}")
+    public Book getById(Integer id);
+}
+```
+
+测试
+
+```java
+@Autowired
+BookDao bookDao;
+
+@Test
+void contextLoads() {
+    System.out.println(bookDao.getById(1));
+}
+```
+
+**小结**
+
+1. 勾选MyBatis技术，也就是导入MyBatis对应的starter
+2. 数据库连接相关信息转换成配置
+3. 数据库SQL映射需要添加@Mapper被容器识别到
+
+**小结**
+
+1. MySQL 8.X驱动强制要求设置时区
+   - 修改url，添加`?serverTimezone=UTC`设定
+   - 永久解决方案，修改MySQL数据库配置（略)
+2. 驱动类过时，提醒更换为`com.mysql.cj.jdbc.Driver`
+
+### 整合MyBatis-Plus
+
+- MyBatis-Plus与Mybatis区别
+  - 导入坐标不同
+  - 数据层实现简化
+
+1. 手动昂添加lSpringBoot整合MyBatis-Plus的坐标，可以通过mvnrepository获取
+
+```xml
+<dependency>
+    <groupId>com.baomidou</groupId>
+    <artifactId>mybatis-plus-boot-starter</artifactId>
+    <version>3.5.1</version>
+</dependency>
+```
+
+注意事项：
+由于SpringBoot中未收录MyBatis-Plus的坐标版本，需要指定对应的Version
+
+2. XxxDao继承BaseMapper(Xxx)
+
+```java
+@Mapper
+public interface BookDao extends BaseMapper<Book> {
+}
+```
+
+3. 测试
+
+```java
+@Autowired
+BookDao bookDao;
+
+@Test
+void contextLoads() {
+    System.out.println(bookDao.selectById(1));
+}
+
+@Test
+public void findAll(){
+    System.out.println(bookDao.selectList(null));
+}
+```
+
+**小结**
+
+1. 手工添加MyBatis-Plus对应的starter
+2. 数据层接口使用BaseMapper简化开发
+3. 需要使用的第三方技术无法通过勾选确定时，需要手工添加坐标
+
+### 整合Druid
+
+```xml
+<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>druid-spring-boot-starter</artifactId>
+    <version>1.1.21</version>
+</dependency>
+```
+
+**通用性指定数据源**
+
+```yaml
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/test
+    username: root
+    password: 2233
+    type: com.alibaba.druid.pool.DruidDataSource
+```
+
+**变更Druid的配置方式**
+
+```yaml
+spring:
+  datasource:
+  	druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/test
+      username: root
+      password: 2233
+```
+
+### 整合第三方技术
+
+- 导入对应的starter
+- 配置对应的设置或采用默认配置
+
+**小结**
+
+1. 整合Druid需要导入Druid对应的starter
+2. 根据Druid提供的配置方式进行配置
+3. 整合第三方技术通用方式
+   - 导入对应的starter
+   - 根据提供的配置格式，配置非默认值对应的配置项
