@@ -35,3 +35,9 @@ log.info(String.valueOf($END$));
 Setting -> Editor -> File Types -> Ignore File and Folders
 
 输入要隐藏的文件名，支持*号通配符
+
+## 快速编码
+
+### 快速foreach一个可迭代集合
+
+`iter`：自动生成最近代码块中的可迭代对象的foreach迭代方式
