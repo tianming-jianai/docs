@@ -9,6 +9,8 @@
 > VIDEO：[BiliBili](https://www.bilibili.com/video/BV15b4y1a7yG)
 >
 > FILE：
+>
+> GITHUB：[学习SpringBoot](https://github.com/tianming-jianai/springboot2022)
 
 > 废寝忘食
 >
@@ -27,12 +29,16 @@
 - 开始时间：2022-05-16
 - 结束时间：
 
-|    日期    | 课程编号 |    学习时长     | 复习时间 |
-| :--------: | :------: | :-------------: | :------: |
-| 2022-05-25 |  P1~P12  | 18:30~20:30  2h |          |
-| 2022-05-26 | P13~P21  | 14:40~16:40  2h |          |
-| 2022-05-27 | P22~P31  | 15:30~17:30  2h |          |
-|            |          |                 |          |
+|    日期    | 课程编号 |       学习时长       | 复习时间 |
+| :--------: | :------: | :------------------: | :------: |
+| 2022-05-25 |  P1~P12  |   18:30~20:30  2h    |          |
+| 2022-05-26 | P13~P21  |   14:40~16:40  2h    |          |
+| 2022-05-27 | P22~P31  |   15:30~17:30  2h    |          |
+| 2022-05-28 | P32~P35  | 14:30~16:30  1h40min |          |
+| 2022-05-29 | P36~P42  |   14:20~16:20  2h    |          |
+
+> 学习经验：
+> 看视频就看视频，不要急着去扩展新的知识点，可以先记下来，否则有损学习进度
 
 ## 测验
 
@@ -765,6 +771,14 @@ CREATE TABLE `tbl_book` (
 )
 ```
 
+```sql
+insert into tbl_book values
+(1,'code','java','run everywhere'),
+(2,'code','python','convinent'),
+(3,'code','js','web king'),
+(4,'code','go','efficient concurrent');
+```
+
 ```java
 @Data
 public class Book {
@@ -917,3 +931,621 @@ spring:
 3. 整合第三方技术通用方式
    - 导入对应的starter
    - 根据提供的配置格式，配置非默认值对应的配置项
+
+> DATE：2022-05-27
+
+## 基于SpringBoot的SSMP整合案例
+
+- ### 案例效果演示
+
+TODO
+
+### 案例实现方案分析
+
+- 实体类开发——使用Lombok快速制作实体类
+
+- Dao开发——整合MyBatisPlus，制作数据层测试类
+
+- Service开发——基于MyBatisPlus进行增量开发，制作业务层测试类
+- Controller开发——基于Restful开发，使用PostMan测试接口功能
+- Controller开发——前后端开发协议制作
+
+- 页面开发——基于VUE+ElementUI制作，前后端联调，页面数据处理，页面消息处理
+  - 列表、新增、修改、删除、分页、查询
+
+- 项目异常处理
+
+- 按条件查询——页面功能调整、Controller修正功能、Service修正功能
+
+**小结**
+
+- SSMP案例效果演示
+- SSMP案例制作流程解析
+  - 先开发基础CRUD功能，做一层测一层
+  - 调通页面，确认异步提交成功后，制作所有功能
+  - 添加分页功能与查询功能
+
+### 模块创建
+
+```xml
+<parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.7.0</version>
+    <relativePath/> <!-- lookup parent from repository -->
+</parent>
+```
+
+1. 勾选SpringMVC与MySQL坐标
+2. 修改配置文件为yml格式
+3. 设置端口为80方便访问
+
+### 实体类快速开发（lobmok）
+
+```java
+@Data
+public class Book {
+    private Integer id;
+    private String type;
+    private String name;
+    private String description;
+}
+```
+
+快速查看实体类属性方法：`Ctrl + F12`
+
+- 常用注解 @Data
+- 为当前实体类在编译期设置对应的get/set方法，toString方法，hashCode方法，equales方法
+
+**小结**
+
+1. 实体类制作
+2. 使用lombok简化开发
+   - 导入lombok无需指定版本，由SpringBoot提供版本
+   - @Data注解
+
+### 数据层标准开发（基础CRUD）
+
+- 导入mybatisPlus与Druid对应的stater
+
+```xml
+<dependency>
+    <groupId>com.baomidou</groupId>
+    <artifactId>mybatis-plus-boot-starter</artifactId>
+    <version>3.5.1</version>
+</dependency>
+<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>druid-spring-boot-starter</artifactId>
+    <version>1.2.9</version>
+</dependency>
+```
+
+```sql
+alter table book rename to tbl_book;
+alter table tbl_book change id id int primary key;
+alter table tbl_book change id id auto_increment;
+```
+
+- 配置数据源与MybaPlus对应的基础配置（id生成策略使用数据库自增策略）
+
+```yaml
+spring:
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/test
+      username: root
+      password: 2233
+      
+mybatis-plus:
+  global-config:
+    db-config:
+      table-prefix: tbl_
+      id-type: auto
+```
+
+- 继承BaseMapper并指定泛型
+
+```java
+@Mapper
+public interface BookDao extends BaseMapper<Book> {
+}
+```
+
+- 制作测试类测试结果
+
+```java
+@SpringBootTest
+public class BookDaoTests {
+
+    @Autowired
+    BookDao bookDao;
+
+    @Test
+    public void getByIdTest() {
+        System.out.println(bookDao.selectById(5));
+    }
+
+    @Test
+    public void testSave() {
+        Book book = new Book();
+        book.setType("测试数据123");
+        book.setName("测试数据123");
+        book.setDescription("测试数据123");
+        bookDao.insert(book);
+    }
+
+    @Test
+    public void testUpdate() {
+        Book book = new Book();
+        book.setId(6);
+        book.setType("测试数据abc");
+        book.setName("测试数据abc");
+        book.setDescription("测试数据abc");
+        bookDao.updateById(book);
+    }
+
+    @Test
+    public void testDelete() {
+        int i = bookDao.deleteById(5);
+        System.out.println(i);
+    }
+
+    @Test
+    public void testGetAll() {
+        System.out.println(bookDao.selectList(null));
+    }
+}
+```
+
+**小结**
+
+1. 手工导入starter坐标（ 2个)
+2. 配置数据源与MyBatisPlus对应的配置
+3. 开发Dao接口（继承BaseMapper)
+4. 制作测试类测试Dao功能是否有效
+
+### 开启MP运行日志
+
+- 为方便调试可以开启MyBatisPlus的日志
+
+```yaml
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+```
+
+**小结**
+
+1. 使用配置方式开启日志，设置日志输出方式为标准输出
+
+注意：禁止上线开启
+
+### 分页
+
+- 分页操作需要设定分页对象IPage
+
+```java
+IPage page = new Page(1,3);
+bookDao.selectPage(page,null);
+```
+
+- IPage对象中封账了分页操作中的所有数据
+  - 数据
+  - 每页数据总量
+  - 最大页码值
+  - 数据总量
+
+```java
+@Test
+public void testGetPage() {
+    IPage page = new Page(1,3);
+    bookDao.selectPage(page,null);
+    List records = page.getRecords(); // 数据
+    System.out.println(page.getCurrent()); // 当前页
+    System.out.println(page.getSize()); // 单页显示数量
+    System.out.println(page.getTotal()); // 总数据量
+    System.out.println(page.getPages()); // 总页数
+    System.out.println(records);
+}
+```
+
+- 分页操作是在MyBatisPlus的常规操作基础上增强得到，内部是动态的拼写SQL语句，因此需要增强对应的功能，使用MyBatisPlus拦截器实现
+
+```java
+@Configuration
+public class MPConfig {
+    @Bean
+    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+        MybatisPlusInterceptor mybatisPlusInterceptor = new MybatisPlusInterceptor();
+        mybatisPlusInterceptor.addInnerInterceptor(new PaginationInnerInterceptor());
+        return mybatisPlusInterceptor;
+    }
+}
+```
+
+**小结**
+
+1. 使用IPage封装分页数据
+2. 分页操作依赖MyBatisPlus分页拦截器实现功能
+3. 借助MyBatisPlus日志查阅执行SQL语句
+
+### 数据层标准开发（条件查询）
+
+- 使用QueryWrapper对象封装查询条件，推荐使用LambdaQueryWrapper对象，所有查询操作封装成方法调用
+
+```java
+@Test
+public void testGetBy() {
+    QueryWrapper<Book> queryWrapper = new QueryWrapper<>();
+    queryWrapper.like("name", "Java");
+    bookDao.selectList(queryWrapper);
+
+    String name = "o";
+    LambdaQueryWrapper<Book> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+    lambdaQueryWrapper.like(StringUtils.hasText(name), Book::getName, name);
+    bookDao.selectList(lambdaQueryWrapper);
+}
+```
+
+- 支持动态拼写查询条件
+
+```java
+String name = null;
+LambdaQueryWrapper<Book> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+lambdaQueryWrapper.like(StringUtils.hasText(name), Book::getName, name);
+bookDao.selectList(lambdaQueryWrapper);
+```
+
+```java
+==>  Preparing: SELECT id,type,name,description FROM tbl_book
+==> Parameters: 
+<==    Columns: id, type, name, description
+<==        Row: 1, code, java, run everywhere
+<==        Row: 2, cod, python, conveient
+<==        Row: 3, code, javascript, web king
+<==        Row: 4, code, go, efficient concurrency
+<==        Row: 6, 测试数据abc, 测试数据abc, 测试数据abc
+<==      Total: 5
+```
+
+**小结**
+
+1. 使用Querywrapper对象封装查询条件
+2. 推荐使用LambdaQuerywrapper对象
+3. 所有查询操作封装成方法调用
+4. 查询条件支持动态条件拼装
+
+> DATE：2022-05-28
+
+### 业务层标准开发（基础CRUD）
+
+- Service层接口定义与数据层接口定义具有较大`区别`，不要混用
+  - selectByUserNameAndPassword(String name, String password)
+  - login(String username, String password)
+
+- 接口定义
+
+```java
+public interface BookService {
+    Boolean save(Book book);
+    Boolean update(Book book);
+    Boolean delete(Integer id);
+    Book getById(Integer id);
+    List<Book> getAll();
+    IPage<Book> getByPage(int current, int size);
+}
+```
+
+- 实现类定义
+
+```java
+@Component
+public class BookServiceImpl implements BookService {
+
+    @Autowired
+    BookDao bookDao;
+
+    @Override
+    public Boolean save(Book book) {
+        return bookDao.insert(book) > 0;
+    }
+    ...
+    @Override
+    public IPage<Book> getByPage(int current, int size) {
+        IPage<Book> page = new Page<>(current, size);
+        bookDao.selectPage(page, null);
+        return page;
+    }
+}
+```
+
+- 测试类定义
+
+```java
+@SpringBootTest
+class BookServiceImplTest {
+
+    @Autowired
+    BookService bookService;
+
+    @Test
+    void save() {
+        Book book = new Book();
+        book.setType("测试数据135");
+        book.setName("测试数据135");
+        book.setDescription("测试数据135");
+        bookService.save(book);
+    }
+    ...
+```
+
+
+
+业务层方法`必须写测试用例`
+快速创建该类的测试类：`Ctrl + Shift + T` 
+
+将业务层都定义为操作状态，成功或失败，而不是影响了多少数据，那是数据层的工作，业务层都是逻辑规则
+
+**小结**
+
+1. Service接口名称定义成业务名称，并与Dao接口名称进行区分心
+2. 制作测试类测试service功能是否有效
+
+
+
+### 业务层快速开发（基于MyBatisPlus）
+
+- 快速开发方案
+  - 使用MybatisPlus提供有业务层通用接口（IService<T>）与业务层通用实现类（ServiceImpl<M,T>）
+  - 在通用类基础上做功能重载 或功能追加
+  - 注意`不要覆盖原始操作`，避免原始提供的功能丢失
+- 接口定义
+
+```java
+public interface IBookService extends IService<Book> {
+    // 追加的操作与原始操作通过名称区分，功能类似
+    Boolean delete(Integer id);
+    Boolean insert(Book book);
+    Boolean modify(Book book);
+    Book get(Integer id);
+}
+```
+
+- 实现类定义
+
+```java
+@Component
+public class IBookServiceImpl extends ServiceImpl<BookDao, Book> implements IBookService {
+}
+```
+
+**小结**
+
+1. 使用通用接口( ISerivce<T>）快速开发service
+2. 使用通用实现类( ServiceImpl<M,T>)快速开发ServiceImpl
+3. 可以在通用接口基础上做功能重载或功能追加
+4. 注意重载时不要覆盖原始操作，避免原始提供的功能丢失
+
+### 表现层标准开发
+
+- 功能测试
+
+```java
+@RestController
+@RequestMapping("/books")
+public class BookController {
+    @Autowired
+    private IBookService bookService;
+	
+    @GetMapping
+    public List<Book> getAll() {
+        return bookService.list();
+    }
+}
+```
+
+```bash
+curl http://localhost/books
+```
+
+- 表现层开发
+
+```java
+@RestController
+@RequestMapping("/books")
+public class BookController {
+    @Autowired
+    private IBookService bookService;
+
+    @PostMapping
+    public boolean save(@RequestBody Book book) {
+        return bookService.save(book);
+    }
+
+    @PutMapping
+    public boolean update(@RequestBody Book book) {
+        return bookService.updateById(book);
+    }
+
+    @DeleteMapping("/{id}")
+    public boolean delete(@PathVariable Integer id) {
+        return bookService.removeById(id);
+    }
+
+    @GetMapping("/{id}")
+    public Book getById(@PathVariable("id") Integer id) {
+        return bookService.getById(id);
+    }
+
+    @GetMapping
+    public List<Book> getAll() {
+        return bookService.list();
+    }
+
+    @GetMapping("/{current}/{size}")
+    public IPage<Book> getByPage(@PathVariable int current,@PathVariable int size) {
+        return bookService.page(current, size);
+    }
+}
+```
+
+- 测试表现层
+
+  - POSTMAN
+
+  - CURL
+
+    ```bash
+    # save
+    curl -X POST -H 'Content-Type: application/json' -d '{"type":"tool","name":"curl","description":"web_req"}' localhost/books
+    # update
+    curl -X PUT -H 'Content-Type: application/json' -d '{"id":"2","type":"tool","name":"idea","description":"java ide"}' localhost/books
+    # delete
+    curl -X DELETE http://localhost/books/1
+    # getById
+    curl http://localhost/books/11
+    # getAll
+    curl http://localhost/books
+    # getByPage
+    curl http://localhost/books/1/5
+    ```
+
+    
+
+**小结**
+
+1. 基于Restful制作表现层接口
+   - 新增：POST
+   - 删除：DELETE
+   - 修改：PUT
+   - 查询：GET
+2. 接收参数
+   - 实体数据：@RequestBody
+   - 路径变量：@PathVariable
+
+### 表现层消息一致性处理（R对象）
+
+- 增删改
+
+  true | false
+
+- 查单条
+
+  ```json
+  {"id":1,"type":"测试数据246","name":"测试数据246","description":"测试数据246"}
+  ```
+
+- 查全部
+
+  ```json
+  [{"id":1,"type":"测试数据246","name":"测试数据246","description":"测试数据246"},{"id":2,"type":"测试数据246","name":"测试数据246","description":"测试数据246"},{"id":3,"type":"测试数据246","name":"测试数据246","description":"测试数据246"},{"id":4,"type":"测试数据246","name":"测试数据246","description":"测试数据246"},{"id":6,"type":"测试数据246","name":"测试数据246","description":"测试数据246"},{"id":9,"type":"测试数据135","name":"测试数据135","description":"测试数据135"}]
+  ```
+
+缺点：前端人员拿到数据格式乱七八糟
+
+
+
+`改正：操作结果统一格式`
+
+![image-20220529160907790](image-20220529160907790.png)
+
+
+
+- 设计表现层返回结果的模型类，用于后端与前端进行数据格式统一，也称为`前后端数据协议`
+
+```java
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class R {
+    private Boolean flag;
+    private Object data;
+
+    public R(Boolean flag) {
+        this.flag = flag;
+    }
+}
+```
+
+- 表现层接口统一返回类型结果
+
+```java
+@RestController
+@RequestMapping("/books")
+public class BookController2 {
+    @Autowired
+    private IBookService bookService;
+
+    @PostMapping
+    public R save(@RequestBody Book book) {
+        return new R(bookService.save(book));
+    }
+
+    @PutMapping
+    public R update(@RequestBody Book book) {
+        return new R(bookService.updateById(book));
+    }
+
+    @DeleteMapping("/{id}")
+    public R delete(@PathVariable Integer id) {
+        return new R(bookService.removeById(id));
+    }
+
+    @GetMapping("/{id}")
+    public R getById(@PathVariable("id") Integer id) {
+
+        return new R(true, bookService.getById(id));
+    }
+
+    @GetMapping
+    public R getAll() {
+        return new R(true, bookService.list());
+    }
+
+    @GetMapping("/{current}/{size}")
+    public IPage<Book> getByPage(@PathVariable int current, @PathVariable int size) {
+        return bookService.page(current, size);
+    }
+}
+```
+
+**小结**
+
+1. 设计统一的返回值结果类型便于前端开发读取数据
+2. 返回值结果类型可以根据需求自行设定，没有固定格式
+3. 返回值结果模型类用于后端与前端进行数据格式统一，也称为前后端数据协议
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
