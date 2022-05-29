@@ -1,6 +1,7 @@
 const { defaultTheme } = require('@vuepress/theme-default')
 const { searchPlugin } = require('@vuepress/plugin-search')
 const { backToTopPlugin } = require('@vuepress/plugin-back-to-top')
+// 根据组件文件或目录自动注册 Vue 组件
 const { registerComponentsPlugin } = require('@vuepress/plugin-register-components') // 根据组件文件或目录自动注册 Vue 组件
 const { path } = require('@vuepress/utils')
 
