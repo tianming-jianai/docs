@@ -25,7 +25,8 @@
 | 2022-05-18 | P11~P14  |   21:00~24:00 1h20min   |          |
 | 2022-05-20 | P15~P18  |   22:30~次日00:38 1h    |          |
 | 2022-05-25 | P15~P18  |   21:30~次日23:30 2h    |          |
-| 2022-05-25 | P19~P22  | 21:30~次日23:30 1h30min |          |
+| 2022-05-26 | P19~P22  | 21:30~次日23:30 1h30min |          |
+| 2022-05-30 | P23~P27  |       22:40~00:30       |          |
 
 ## 测验
 
@@ -742,67 +743,143 @@ department_id降序、salary升序
 select employee_id,salary,department_id from employees order by department_id desc,salary asc;
 ```
 
+### 分页
 
+背景1：查询返回的记录太多了，查看起来很不方便，怎么样能够实现分页查询呢?
+背景2：表里有4条数据，我们只想要显示第2、3条数据怎么办呢?
 
-```mysql
-
-```
-
-
-
-```mysql
-
-```
-
-
+1. 分页原理
 
 ```mysql
-
+select employee_id,last_name from employees limit 0,20;
 ```
 
+需求：每页显示pageSize条记录，此时显示第PageNo页
+公式：limit (pageNo-1)*pageSize,pageSize;
 
+2. 声明顺序：where ... order by ... limit
+
+limit的格式：严格来说：limit 位置偏移量,条目数
+结构limit 0,条目数 等价于 limit 条目数 
 
 ```mysql
-
+select employee_id,last_name from employees limit 10
 ```
 
-
+练习：显示第32/33条数据
 
 ```mysql
-
+select employee_id,last_name from employees limit 31,2;
 ```
 
-
+3. MySQL8.0新特性：limit ... offset ...
 
 ```mysql
-
+select employee_id,last_name from employees limit 2 offset 31;
 ```
 
-
+练习：查询员工表中工资最高的员工信息
 
 ```mysql
-
+select employee_id,last_name from employees order by salary desc limit 0,1;
 ```
 
+- 使用limit的好处
 
+约束返回结果的数量可以减少数据表的网络传输量，也可以提升查询效率。如果我们知道返回结果只有1条，就可以使用LIMIT 1，告诉SELECT语句只需要返回一条记录即可。这样的好处就是SELECT不需要扫描完整的表，只需要检索到一条符合条件的记录即可返回。
+
+**拓展**
+
+SQL Server、Oracle 、PGSQL、DB2 都有各自的分页写法
+
+### 课后练习
+
+1. 查询员工的姓名和部门号和年薪，按年薪降序，按姓名升序显示
+2. 选择工资不在 8000到17000的员工的姓名和工资，按工资降序，显示第21到40位置的数据
+3. 查询邮箱中包含e 的员工信息，并先按邮箱的字节数降序，再按部门号升序
 
 ```mysql
-
+select employee_id,last_name,email,department_id from employees 
+# where email like '%e%' 
+where email regex '[e]' 
+order by length(email) desc,department_id;
 ```
 
+## 第六章：多表查询
 
+多表查询，也称为关联查询，指两个或更多个表一起完成查询操作。
+前提条件:这些一起查询的表之间是有关系的(一对一、一对多)，它们之间一定是有关联字段，这个关联字段可能建立了外键，也可能没有建立外键。比如:员工表和部门表，这两个表依靠“部门编号"进行关联。
+
+- 为什么需要使用多表的查询？
+  - 减少：冗余、磁盘IO
+
+熟悉常见的几个表：employees、departments、locations
+
+### 案例：员工'Abel'在哪个城市工作
+
+### 笛卡尔积（或交叉连接）的理解
+
+笛卡尔乘积是一个数学运算。假设我有两个集合X和Y，那么`X和Y的笛卡尔积就是X和Y的所有可能组合`，也就是第一个对象来自于X，第二个对象来自于Y的所有可能。组合的个数即为两个集合中元素个数的乘积数。|
+交叉连接：CROSS JOIN
+
+错误的方式：
+
+```sql
+select * from employees cross join departments; # 2889 条数据
+```
+
+### 案例分析与问题解决
+
+正确方式：需要有连接条件
 
 ```mysql
-
+select e.employee_id,e.last_name,d.department_name,l.city from employees e,departments d,locations l 
+where last_name = 'Abel' 
+and e.department_id = d.department_id 
+and l.location_id = d.location_id;
 ```
 
+如果查询语句中出现了多个表中都存在的字段，则必须指明此字段所在的表
+建议：从SQL优化的角度，建议多表查询时，每个字段前都指明其所在的表
 
+可以给表起别名，在select和where中使用表的别名
+有了别名就不能再使用原名
+
+如果有n个表实现多表的查询，则需要至少n-1个连接条件
 
 ```mysql
-
+/*
+演绎式：提出问题 ---> 解决问题1 ---> 提出问题2 ---> 解决问题2 ....
+		优点：引导兴趣
+归纳式：总分
+		优点：效率高，中国教育
+*/
 ```
 
+### 多表查询的分类：
 
+角度1：等值连接 vs 非等值连接
+角度2：自连接 vs 非自连接
+角度3：内连接 vs 外连接
+
+### 等值连接 vs 非等值连接
+
+```mysql
+select e.last_name,e.salary,j.grade_level from employees e,job_grades j 
+# where e.salary between j.lowest_sal and j.highest_sal;
+where e.salary >= j.lowest_sal and e.salary <= j.highest_sal;
+```
+
+### 自连接 vs 非自连接
+
+查询员工id、last_name 及其 管理者 的id、last_name
+
+```mysql
+select e.employee_id,e.last_name,m.employee_id,m.last_name from employees e,employees m 
+where e.manager_id = m.employee_id;
+```
+
+> DATE：2022-05-31
 
 ```mysql
 

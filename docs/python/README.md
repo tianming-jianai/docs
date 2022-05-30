@@ -66,7 +66,9 @@ next: /python/env
 | mypy          | **mypy** 库来检验最终代码是否符合注解                        |
 |               |                                                              |
 
+## 测验
 
+[菜鸟教程Python100例](https://www.runoob.com/python/python-100-examples.html)
 
 
 
