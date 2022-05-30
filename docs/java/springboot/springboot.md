@@ -8,7 +8,7 @@
 >
 > VIDEO：[BiliBili](https://www.bilibili.com/video/BV15b4y1a7yG)
 >
-> FILE：
+> FILE：[基础篇](F:\STU\itcast\SpringBoot-黑马\基础篇) [运维实用篇](F:\STU\itcast\SpringBoot-黑马\运维实用篇) [开发实用篇](F:\STU\itcast\SpringBoot-黑马\开发实用篇) [原理篇](F:\STU\itcast\SpringBoot-黑马\原理篇)
 >
 > GITHUB：[学习SpringBoot](https://github.com/tianming-jianai/springboot2022)
 
@@ -36,6 +36,7 @@
 | 2022-05-27 | P22~P31  |   15:30~17:30  2h    |          |
 | 2022-05-28 | P32~P35  | 14:30~16:30  1h40min |          |
 | 2022-05-29 | P36~P42  |   14:20~16:20  2h    |          |
+| 2022-05-30 |  P43~P   |   18:50~20:50  2h    |          |
 
 > 学习经验：
 > 看视频就看视频，不要急着去扩展新的知识点，可以先记下来，否则有损学习进度
@@ -1449,7 +1450,7 @@ public class BookController {
 
 `改正：操作结果统一格式`
 
-![image-20220529160907790](image-20220529160907790.png)
+![image-20220529160907790](../img/image-20220529160907790.png)
 
 
 
@@ -1517,35 +1518,246 @@ public class BookController2 {
 2. 返回值结果类型可以根据需求自行设定，没有固定格式
 3. 返回值结果模型类用于后端与前端进行数据格式统一，也称为前后端数据协议
 
+### 前后端调用（axios发送异步请求）
+
+- 前后端协议联调
+  - 前后端分离结构设计中页面归属前端服务器
+  - 单体工程中页面放置在resources目录下的static目录中（建议执行clean)
+
+```js
+getAll() {
+    axios.get('/books').then(res => {
+        console.log(res.data);
+    })
+}
+```
 
 
 
+**小结**
 
+1. 单体项目中页面放置在resources/static目录下
+2. created钩子函数用于初始化页面时发起调用
+3. 页面使用axios发送异步请求获取数据后确认前后端是否联通
 
+### 列表功能
 
+```js
+getAll() {
+    axios.get('/books').then(res => {
+        if (res.data.flag) {
+            this.dataList = res.data.data;
+        }
+    })
+}
+```
 
+**小结**
 
+1. 将查询数据返回到页面，利用前端数据双向绑定进行数据展示
 
+### 添加功能
 
+- 弹出添加窗口
 
+```js
+// 弹出添加窗口
+handleCreate() {
+    this.dialogFormVisible = true;
+    this.resetForm();
+},
+```
 
+- 清除数据
 
+```js
+// 弹出添加窗口
+handleCreate() {
+    this.dialogFormVisible = true;
+    this.resetForm();
+},
+// 重置表单
+resetForm() {
+    this.formData = {};
+},
+```
 
+- 添加
 
+```js
+// 添加
+handleAdd() {
+    axios
+        .post("/books", this.formData)
+        .then((res) => {
+        if (res.data.flag) {
+            // 1. 关闭弹层
+            this.dialogFormVisible = false;
+            this.$message.success("添加成功");
+        } else {
+            this.$message.success("添加失败");
+        }
+    })
+        .finally(() => {
+        // 2. 加载数据
+        this.getAll();
+    });
+},
+```
 
+- 取消添加
 
+```js
+// 取消
+cancel() {
+    this.dialogFormVisible = false;
+    this.$message.info("当前操作取消");
+},
+```
 
+**小结**
 
+1. 请求方式使用POST调用后台对应操作
+2. 添加操作结束后动态刷新页面加载数据
+3. 根据操作结果不同，显示对应的提示信息
+4. 弹出添加Div时清除表单数据
 
+### 删除功能
 
+- 删除
 
+```js
+// 删除
+handleDelete(row) {
+    // console.log(row);
 
+    this.$confirm("此操作永久删除当前信息，是否继续？", "提示", {
+        type: "info",
+    })
+        .then(() => {
+        // console.log('success');
+        axios
+            .delete("/books/" + row.id)
+            .then((res) => {
+            if (res.data.flag) {
+                this.$message.success("删除成功");
+            } else {
+                this.$message.error("删除失败");
+            }
+        })
+            .finally(() => {
+            this.getAll();
+        });
+    })
+        .catch(() => {
+        this.$message.info("取消操作");
+    });
+},
+```
 
+**小结**
 
+1. 请求方式使用Delete调用后台对应操作
+2. 删除操作需要传递当前行数据对应的id值到后台
+3. 删除操作结束后动态刷新页面加载数据
+4. 根据操作结果不同，显示对应的提示信息
+5. 删除操作前弹出提示框避免误操作
 
+### 修改功能
 
+- 弹出修改窗口
 
+```js
+// 弹出编辑窗口
+handleUpdate(row) {
+    axios
+        .get("/books/" + row.id)
+        .then((res) => {
+        if (res.data.flag) {
+            // 展示弹层，加载数据
+            this.formData = res.data.data;
+            this.dialogFormVisible4Edit = true;
+        } else {
+            this.$message.error("数据同步失败，自动刷新");
+        }
+    })
+        .finally(() => {
+        this.getAll();
+    });
+},
+```
 
+- 删除消息维护
 
+```js
+// 删除
+handleDelete(row) {
+    // console.log(row);
 
+    this.$confirm("此操作永久删除当前信息，是否继续？", "提示", {
+        type: "info",
+    })
+        .then(() => {
+        // console.log('success');
+        axios
+            .delete("/books/" + row.id)
+            .then((res) => {
+            if (res.data.flag) {
+                this.$message.success("删除成功");
+            } else {
+                this.$message.error("数据同步失败，自动刷新");
+            }
+        })
+            .finally(() => {
+            this.getAll();
+        });
+    })
+        .catch(() => {
+        this.$message.info("取消操作");
+    });
+},
+```
 
+**小结**
+
+1. 加载要修改数据通过传递当前行数据对应的id值到后台查询数据
+2. 利用前端数据双向绑定将查询到的数据进行回显
+
+- 修改
+
+```js
+// 修改
+handleEdit() {
+    axios
+        .put("/books", this.formData)
+        .then((res) => {
+        if (res.data.flag) {
+            // 1. 关闭弹层
+            this.dialogFormVisible4Edit = false;
+            this.$message.success("修改成功");
+        } else {
+            this.$message.error("修改失败");
+        }
+    })
+        .finally(() => {
+        this.getAll();
+    });
+},
+```
+
+- 取消添加和修改
+
+```js
+// 取消
+cancel() {
+    this.dialogFormVisible = false;
+    this.dialogFormVisible4Edit = false;
+    this.$message.info("当前操作取消");
+},
+```
+
+**修改**
+
+1. 请求方式使用PUT调用后台对应操作
+2. 修改操作结束后动态刷新页面加载数据（同新增)
+3. 根据操作结果不同，显示对应的提示信息（同新增)
