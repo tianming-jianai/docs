@@ -37,6 +37,7 @@
 | 2022-05-28 | P32~P35  | 14:30~16:30  1h40min |          |
 | 2022-05-29 | P36~P42  |   14:20~16:20  2h    |          |
 | 2022-05-30 | P43~P48  |   18:50~20:50  2h    |          |
+| 2022-05-31 |  P49~P   |   13:30~15:30  2h    |          |
 
 > 学习经验：
 > 看视频就看视频，不要急着去扩展新的知识点，可以先记下来，否则有损学习进度
@@ -1299,7 +1300,7 @@ class BookServiceImplTest {
 ### 业务层快速开发（基于MyBatisPlus）
 
 - 快速开发方案
-  - 使用MybatisPlus提供有业务层通用接口（IService<T>）与业务层通用实现类（ServiceImpl<M,T>）
+  - 使用MybatisPlus提供有业务层通用接口（`IService<T>`）与业务层通用实现类（`ServiceImpl<M,T>`）
   - 在通用类基础上做功能重载 或功能追加
   - 注意`不要覆盖原始操作`，避免原始提供的功能丢失
 - 接口定义
@@ -1324,8 +1325,8 @@ public class IBookServiceImpl extends ServiceImpl<BookDao, Book> implements IBoo
 
 **小结**
 
-1. 使用通用接口( ISerivce<T>）快速开发service
-2. 使用通用实现类( ServiceImpl<M,T>)快速开发ServiceImpl
+1. 使用通用接口(` ISerivce<T>`）快速开发service
+2. 使用通用实现类( `ServiceImpl<M,T>`)快速开发ServiceImpl
 3. 可以在通用接口基础上做功能重载或功能追加
 4. 注意重载时不要覆盖原始操作，避免原始提供的功能丢失
 
@@ -1691,7 +1692,7 @@ handleUpdate(row) {
 
 - 删除消息维护
 
-```js
+```js{16}
 // 删除
 handleDelete(row) {
     // console.log(row);
@@ -1765,3 +1766,471 @@ cancel() {
 3. 根据操作结果不同，显示对应的提示信息（同新增)
 
 > DATE：2022-05-30
+
+### 异常消息处理
+
+我们现在做的操作都是在理想情况下进行的操作，其实在企业开发中可能会出各种各样的问题
+
+#### 业务消息一致性处理
+
+- 业务操作成功或失败返回数据格式
+
+```json
+{
+    "flag": true,
+    "data": null
+}
+```
+
+```json
+{
+    "flag": false,
+    "data": null
+}
+```
+
+- 后台代码bug导致数据格式不统一性
+
+```json
+{
+    "timestamp":"2022-05-31T06:06:06.390+00:00",
+    "status":400,
+    "error":"Bad Request",
+    "path":"/books/"
+}
+```
+
+- 对异常进行统一处理，出现异常后，返回指定信息
+
+```java{2,5}
+// 作为SpringMVC的异常处理器
+@RestControllerAdvice
+public class ProjectExceptionAdvice {
+    // 拦截所有异常信息
+    @ExceptionHandler
+    public R doException(Exception ex) {
+        // 记录日志
+        // 通知运维
+        // 发送邮件给开发人员，ex对象发送给开发人员
+        return new R("服务器故障，请稍后再试！");
+    }
+}
+```
+
+- 修改表现层返回结果，封装异常后对应的信息
+  - flag：false
+  - Data：null
+  - 消息(msg)：要显示信息
+
+```java{6,17,22}
+@Data
+@NoArgsConstructor
+public class R {
+    private Boolean flag;
+    private Object data;
+    private String msg;
+
+    public R(Boolean flag) {
+        this.flag = flag;
+    }
+
+    public R(String msg) {
+        this.flag = false;
+        this.msg = msg;
+    }
+
+    public R(Boolean flag, Object data) {
+        this.flag = flag;
+        this.data = data;
+    }
+
+    public R(Boolean flag, String msg) {
+        this.flag = flag;
+        this.msg = msg;
+    }
+}
+```
+
+- 页面消息处理，没有传递消息加载默认消息，传递消息后加载指定消息
+
+```js{9}
+ // 添加
+handleAdd() {
+    axios
+        .post("/books", this.formData)
+        .then((res) => {
+        if (res.data.flag) {
+            // 1. 关闭弹层
+            this.dialogFormVisible = false;
+            this.$message.success("添加成功");
+        } else {
+            this.$message.success(res.data.msg);
+        }
+    })
+        .finally(() => {
+        // 2. 加载数据
+        this.getAll();
+    });
+},
+```
+
+- 可以在表现层Controller中进行消息统一处理
+
+```java{9}
+@PostMapping
+public R save(@RequestBody Book book) throws IOException {
+    if ("123".equals(book.getName())) {
+        // 骗骗编译器
+        throw new IOException();
+    }
+    boolean flag = bookService.save(book);
+    // 消息全部由后台管理
+    return new R(flag, flag ? "添加成功^_^" : "添加失败-_-!");
+}
+```
+
+目的：**国际化**
+
+- 页面消息处理
+
+```js{9}
+ // 添加
+handleAdd() {
+    axios
+        .post("/books", this.formData)
+        .then((res) => {
+        if (res.data.flag) {
+            // 1. 关闭弹层
+            this.dialogFormVisible = false;
+            this.$message.success(res.data.msg);// 消息全部由后台管理
+        } else {
+            this.$message.success(res.data.msg);
+        }
+    })
+        .finally(() => {
+        // 2. 加载数据
+        this.getAll();
+    });
+},
+```
+
+**小结**
+
+1. 使用注解@RestControllerAdvice定义SpringMVC`异常处理器`用来处理异常的
+2. 异常处理器必须被`扫描`加载，否则无法生效
+3. 表现层返回结果的模型类中添加`消息属性`msg用来传递消息到页面
+
+
+
+### 分页
+
+- 页面使用el分页组件添加分页功能
+
+```html
+<!--分页组件-->
+<div class="pagination-container">
+    <el-pagination
+                   class="pagiantion"
+                   @current-change="handleCurrentChange"
+                   :current-page="pagination.currentPage"
+                   :page-size="pagination.pageSize"
+                   layout="total, prev, pager, next, jumper"
+                   :total="pagination.total"
+                   >
+    </el-pagination>
+</div>
+```
+
+- 定义分页组件需要使用的数据并将数据绑定到分页组件
+
+```json
+data:{
+    pagination: {  		//分页相关模型数据
+        currentPage: 1, //当前页码
+        pageSize: 10, 	//每页显示的记录数
+        total: 0, 		//总记录数
+	},
+}
+```
+
+- 替换查询全部功能为分页功能
+
+```js
+// 分页查询
+getAll() {
+    axios.get("/books/" +this.pagination.currentPage +
+              "/" +this.pagination.pageSize
+             )
+        .then((res) => {
+        
+    });
+},
+```
+
+- 后台：分页查询
+
+```java
+@GetMapping("/{current}/{size}")
+public R getByPage(@PathVariable int current, @PathVariable int size) {
+    IPage<Book> page = bookService.page(current, size);
+    return new R(null != page, page);
+}
+```
+
+使用路径参数传递分页数据局，封装对象传递数据
+
+- 加载分页数据
+
+```js
+// 分页查询
+getAll() {
+    axios.get("/books/" +this.pagination.currentPage +
+              "/" +this.pagination.pageSize
+             )
+        .then((res) => {
+        if (res.data.flag) {
+            this.pagination.currentPage = res.data.data.current;
+            this.pagination.pageSize = res.data.data.size;
+            this.pagination.total = res.data.data.total;
+            this.dataList = res.data.data.records;
+        }
+    });
+},
+```
+
+- 分页页码值切换
+
+```js
+// 切换页码
+handleCurrentChange(currentPage) {
+    // 1. 修改页码值为当前选中的页码值
+    this.pagination.currentPage = currentPage;
+    // 2. 执行查询
+    this.getAll();
+},
+```
+
+**小结**
+
+1. 使用el分页组件
+2. 定义分页组件绑定的数据模型
+3. 异步调用获取分页数据
+4. 分页数据页面回显
+
+### 分页功能维护（删除BUG）
+
+说明：最后一页一条数据被删除，仍然停留在这一页
+
+- 对查询结果进行校验，如果当前页码值大于最大页码值，使用最大页码值作为当前页码值重新查询
+
+```java
+@GetMapping("/{current}/{size}")
+public R getByPage(@PathVariable int current, @PathVariable int size) {
+    IPage<Book> page = bookService.page(current, size);
+    // 如果当前页码大于总页码值，那么重新执行查询，使用最大页码值作为当前页码值
+    if (current > page.getPages()) {
+        page = bookService.page((int) page.getPages(), size);
+    }
+    return new R(null != page, page);
+}
+```
+
+当然，这只是一个业务上的补救方案，这样的解决方案并不完美，当短时数据变化量很大时，仍然会出现空白页面
+如果直接跳到第一页，就不会出现这样的问题
+
+**小结**
+
+1. 基于业务需求维护删除功能
+
+
+
+### 条件查询
+
+- 查询条件数据封装
+  - 单独封装
+  - 与分页操作混合封装
+
+```json
+pagination: {
+    //分页相关模型数据
+    currentPage: 1, 	//当前页码
+    pageSize: 10, 		//每页显示的记录数
+    total: 0, 			//总记录数
+    type: "",
+    name: "",
+    description: "",
+},
+```
+
+- 页面数据模型绑定
+
+```html
+<div class="filter-container">
+    <el-input placeholder="图书类别" v-model="pagination.type"
+              style="width: 200px" class="filter-item" ></el-input>
+    <el-input placeholder="图书名称" v-model="pagination.name"
+              style="width: 200px" class="filter-item" ></el-input>
+    <el-input placeholder="图书描述" v-model="pagination.description"
+              style="width: 200px" class="filter-item" ></el-input>
+    <el-button @click="getAll()" class="dalfBut">查询</el-button>
+    <el-button type="primary" class="butT" @click="handleCreate()">新建</el-button>
+</div>
+```
+
+- 组织数据成为get请求发送的数据
+
+```js
+// 分页查询
+getAll() {
+    // 获取查询条件拼接查询条件 最简单写法
+    let param = "?name=" + this.pagination.name;
+    param += "&type=" + this.pagination.type;
+    param += "&description=" + this.pagination.description;
+    console.log("-------------" + param);
+    axios
+        .get(
+        "/books/" +
+        this.pagination.currentPage +
+        "/" +
+        this.pagination.pageSize +
+        param
+    )
+        .then((res) => {
+        if (res.data.flag) {
+            this.pagination.currentPage = res.data.data.current;
+            this.pagination.pageSize = res.data.data.size;
+            this.pagination.total = res.data.data.total;
+            this.dataList = res.data.data.records;
+        }
+    });
+},
+```
+
+条件数据可以根据条件判断写的更简洁
+
+- Controller接收参数
+
+```java
+@GetMapping("/{current}/{size}")
+public R getByPage(@PathVariable int current, @PathVariable int size, Book book) {
+    System.out.println("请求参数：" + book);
+    IPage<Book> page = bookService.page(current, size, book);
+    // 如果当前页码大于总页码值，那么重新执行查询，使用最大页码值作为当前页码值
+    if (current > page.getPages()) {
+        page = bookService.page((int) page.getPages(), size, book);
+    }
+    return new R(null != page, page);
+}
+```
+
+- 业务层接口开发
+
+```java
+public interface IBookService extends IService<Book> {
+    /**
+     * 接收参数返回页数据
+     *
+     * @param current 当前页
+     * @param size    每页条数
+     * @param book    查询条件
+     * @return
+     */
+    IPage<Book> page(int current, int size, Book book);
+}
+```
+
+```java
+@Component
+public class IBookServiceImpl extends ServiceImpl<BookDao, Book> implements IBookService {
+	@Override
+    public IPage<Book> page(int current, int size, Book book) {
+        LambdaQueryWrapper<Book> lqw = new LambdaQueryWrapper<>();
+        lqw.like(Strings.isNotEmpty(book.getType()), Book::getType, book.getType())
+            .like(Strings.isNotEmpty(book.getName()), Book::getName, book.getName())
+            .like(Strings.isNotEmpty(book.getDescription()), Book::getDescription, 
+                  book.getDescription());
+        
+        IPage<Book> page = new Page<>(current, size);
+        return bookDao.selectPage(page, lqw);
+    }
+}
+```
+
+- Controller 调用业务层分页条件查询接口
+
+```java
+@GetMapping("/{current}/{size}")
+public R getByPage(@PathVariable int current, @PathVariable int size, Book book) {
+    System.out.println("请求参数：" + book);
+    IPage<Book> page = bookService.page(current, size, book);
+    // 如果当前页码大于总页码值，那么重新执行查询，使用最大页码值作为当前页码值
+    if (current > page.getPages()) {
+        page = bookService.page((int) page.getPages(), size, book);
+    }
+    return new R(null != page, page);
+}
+```
+
+**小结**
+
+1. 定义查询条件数据模型（当前封装到分页数据模型中)
+2. 异步调用分页功能并通过请求参数传递数据到后台
+
+## 基础篇完结
+
+- 基于SpringBoot的SSMP整合案例
+
+1. pom.xml
+
+   配置起步依赖
+
+2. application.xml
+
+   设置数据源、端口、框架技术相关配置
+
+3. dao
+
+   继承BaseMapper、设置@Mapper
+
+4. dao测试类
+
+5. service
+
+   调用数据层接口或MyBatis-Plus提供的接口快速开发
+
+6. service测试类
+
+7. controller
+
+   基于Restful开发，使用postman测试跑通功能
+
+8. 页面
+
+   放置在resource目录下的static目录中
+
+### 总结
+
+1. 整合JUint
+2. 整合MyBatis
+3. 整合MyBatis-Plus
+4. 整合Druid
+5. 基于springBoot的SSMP整合案例
+
+
+
+### 后续学习
+
+- 基础篇
+  - 能够创建SpringBoot工程
+  - 基于SpringBoot实现ssm/ ssmp整合
+- 实用篇
+  - 运维实用篇
+    - 能够掌握SpringBoot程序多环境开发
+    - 能够基于Linux系统发布SpringBoot工程
+    - 能够解决线上灵活配置SpringBoot工程的需求
+  - 开发实用篇
+    - 能够基于springBoot整合任意第三方技术
+- 原理篇
+
+
+
