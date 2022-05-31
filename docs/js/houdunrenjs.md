@@ -12,7 +12,15 @@
 
 > 后盾人理念：人人做后盾
 
+## 学习进度
 
+- 开始时间：2022-05-30
+- 结束时间：
+
+|    日期    |             课程编号              |    学习时长     | 复习时间 |
+| :--------: | :-------------------------------: | :-------------: | :------: |
+| 2022-05-30 | 第一章：P1~P12<br />第二章：P1~P3 | 12:30~14:30  2h |          |
+| 2022-05-31 |          第二章：P4~P14           | 20:00~22:00  2h |          |
 
 ## 第一章：走进 JAVASCRIPT 黑洞
 
@@ -475,37 +483,169 @@ i++ ++i
 
 ### 4. 逻辑运算符实例详解
 
-```js
+```html
+<body>
+    <input type="text" name="password" />
+    <input type="text" name="confirm_password" />
+    <span name="msg"></span>
+    <script>
+        function query(name) {
+            return document.querySelector(`[name=${name}]`);
+        }
+        console.log(query('password'));
+
+        let inputs = document.querySelectorAll("[name=password],[name=confirm_password]");
+        console.log(inputs);
+        [...inputs].map(item => {
+            item.addEventListener('keyup', function () {
+                let msg = '';
+                if (query('password').value != query('confirm_password').value || query('password').value.length < 5) {
+                    msg = '两次密码不一致或密码长度小于5位'
+                }
+                query('msg').innerHTML = msg
+            })
+        })
+    </script>
+</body>
 ```
 
 ### 5. 短路运算符的妙用
 
 ```js
+let a = 3, b = 0;
+console.log(a == true);
+// 1. 短路与
+if (a || b++) {
+    console.log(b);
+}
+
+// 2. 赋值
+let f = a || b;
+console.log(f);
+// 顺序很重要
+let sex = prompt('请输入性别') || '保密';
+console.log(sex);
+// 提醒：有的语言是返回布尔值
+
+// 3. 函数默认值
+function start(num) {
+    return '*'.repeat(num || 5);
+}
+console.log(start(3));
+
+// 最新版js写法
+function start2(num = 5) {
+    return '*'.repeat(num);
+}
 ```
 
 ### 6. 网站协议接受验证
 
-```js
+```html
+<body>
+    <form action="/action" method="get" id="form">
+      用户名：<input type="text" name="user" />
+      <hr />
+      <input type="checkbox" name="copyright" />接受协议
+      <hr />
+      <button>提交</button>
+    </form>
+    <script>
+      function query(el) {
+        return document.querySelector(el);
+      }
+      query("#form").addEventListener("submit",function(event){
+          let user = query('[name=user]').value.trim();
+          let copyright = query('[name=copyright]').checked;
+          console.log(copyright);
+          console.log(user);
+          // 阻止默认事件，这样就提交不了了
+          if(!user || copy === false){
+              event.preventDefault();
+                alert('请接受协议并添加用户名')
+          }
+      });
+    </script>
+  </body>
 ```
 
 ### 7. 使用if else判断密码强度
 
 ```js
+if(passwd.length>10){
+    clog('超级强度')
+}else if(passwd.length>5){
+    clog('中级轻度')
+}else{
+    clog('低级强度')
+}
 ```
 
 ### 8. 三元表达式真的好可爱
 
-```js
+```html
+<body>
+    <script>
+      // let hd = true ? 2: 5;
+      let hd = true ? (3 ? "hdr" : "hdr.com") : 5;
+      console.log(hd);
+
+      function div(options = {}) {
+        let div = document.createElement('div');
+        div.style.width = options.width ? options.width : '100px';
+        div.style.height = options.height ? options.height : '100px';
+        div.style.backgroundColor = options.bgcolor ? options.bgcolor : 'red';
+        document.body.appendChild(div);
+      }
+      div({width:'300px',height:'50px',bgcolor:'green'});
+    </script>
+  </body>
 ```
 
 ### 9. switch循环控制
 
 ```js
+let error = "notice";
+switch (error) {
+    case "notice":
+    case "warning":
+        console.log("提示或警告信息");
+        break;
+    case "error":
+    default:
+        console.log("错误消息");
+}
+// 向军大叔个人:能使用switch就不使用if，除非判断条件非常复杂
+function message(age) {
+    let msg = "";
+    switch (age) {
+        case age > 60:
+            msg = "老年";
+            break;
+        case age > 40:
+            msg = "中年";
+            break;
+        case age > 20:
+            msg = "青年";
+            break;
+    }
+    // if (age > 60) {
+    //   msg = "老年";
+    // } else if (age > 40) {
+    //   msg = "青年";
+    // } else if (age > 20) {
+    //   msg = "少年";
+    // }
+    return msg;
+}
+console.log(message(32));
 ```
 
 ### 10. while循环控制
 
 ```js
+// 创建table
+let hd = {tr:10,td:5}
 ```
 
 ### 11. dowhile循环实例操作
@@ -516,16 +656,114 @@ i++ ++i
 ### 12. 使用for循环打印杨辉三角
 
 ```js
+// 打印杨辉三角
+function hd(row = 5) {
+    for (let i = 1; i < row; i++) {
+        for (let n = row - i; n > 0; n--) {
+            document.write(`<span>*</span>`);
+        }
+        for (let m = i * 2 - 1; m > 0; m--) {
+            document.write("*");
+        }
+        document.write("<br/>");
+    }
+}
+hd(20);
 ```
 
 ### 13. break-continue与label标签的使用
 
 ```js
+// 打印3个奇数
+let count = 0
+for(let i  = 1;i <= 10; i++){
+    if(i % 2){
+        if (count++ == 3) break;
+        console.log(i)
+    }
+}
+
+// 输出偶数
+for(let i = 1; i <= 10; i++){
+    if(i % 2) continue;
+    console.log(i);
+}
+
+// 退出外层循环
+hdr: for(let i = 1; i <= 10; i++){
+    for(let n = 1; n <= 10; n++){
+        if(n % 2 == 0){
+            console.log(i,n)
+        }
+        if(n + i > 10){
+            break hdr;
+        }
+    }
+}
 ```
 
 ### 14. for-in与for-of使用方法操作
 
 ```js
+// 以表格的形式展示
+let hd = [
+    { title: "第一章 走进JavaScript黑洞", lesson: 3 },
+    { title: "ununtu19.10 配置工作站", lesson: 10 },
+    { title: "媒体查询响应式布局", lesson: 6 },
+];
+document.write(`
+        <table border='1' width='100%'>
+        <thead><tr><th>标题</th><th>课程数量</th></tr></thead>
+    `);
+for (let i in hd) {
+    document.write(`
+        <tr>
+            <td>${hd[i].title}</td>
+            <td>${hd[i].lesson}</td>    
+        </tr>
+        `);
+}
+// for ... of ... 遍历可迭代对象
+for (let video of hd) {
+    document.write(`
+        <tr>
+            <td>${video.title}</td>
+            <td>${video.lesson}</td>    
+        </tr>
+        `);
+}
+document.write("</table>");
+```
+
+点击li显示红色
+
+```html
+<style>
+    ul {
+        list-style: none;
+    }
+
+    li {
+        border: solid 1px #ddd;
+        height: 50px;
+        width: 200px;
+    }
+</style>
+<body>
+    <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    <script>        
+        let lis = document.querySelectorAll("li");
+        for (const li of lis) {
+            li.addEventListener("click", function () {
+                li.style.backgroundColor = "red";
+            });
+        }
+    </script>
+</body>
 ```
 
 
