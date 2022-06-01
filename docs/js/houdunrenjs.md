@@ -17,10 +17,11 @@
 - 开始时间：2022-05-30
 - 结束时间：
 
-|    日期    |             课程编号              |    学习时长     | 复习时间 |
-| :--------: | :-------------------------------: | :-------------: | :------: |
-| 2022-05-30 | 第一章：P1~P12<br />第二章：P1~P3 | 12:30~14:30  2h |          |
-| 2022-05-31 |          第二章：P4~P14           | 20:00~22:00  2h |          |
+|    日期    |             课程编号              |       学习时长       | 复习时间 |
+| :--------: | :-------------------------------: | :------------------: | :------: |
+| 2022-05-30 | 第一章：P1~P12<br />第二章：P1~P3 |   12:30~14:30  2h    |          |
+| 2022-05-31 |          第二章：P4~P14           |   20:00~22:00  2h    |          |
+| 2022-06-01 |           第三章：P1~P4           | 10:40~12:00  1h20min |          |
 
 ## 第一章：走进 JAVASCRIPT 黑洞
 
@@ -766,7 +767,214 @@ document.write("</table>");
 </body>
 ```
 
+> DATE：2022-05-31
 
+## 第三章：JavaScript 值类型使用
+
+### 1. 章节介绍与类型判断
+```js
+let hd = '3'
+console.log(typeof hd);
+
+hd = [];
+let hdr = {};
+console.log(hd instanceof Array); // true
+console.log(hdr instanceof Object); // true
+
+function User() {}
+let xj = new User();
+console.log(xj instanceof User); // true
+console.log(xj instanceof Object); // true
+```
+### 2. 字符串转义与模板字面量使用
+```js
+// 声明字符串
+let hd = new String("hdr.com");
+console.log(hd);
+console.log(hd.toString());
+hd = "hdr.com"; // 这个显然更省力
+console.log(hd);
+
+// 字符转义
+hd = "xj'hdr.com";
+console.log(hd);
+hd = 'xj"hdr.com';
+console.log(hd);
+hd = "xj\t\nhdr.com";
+console.log(hd);
+
+// 字符串拼接
+let year = "2010年";
+let site = "hdr";
+console.log(site + "成立于" + year);
+
+// 使用字面量
+console.log(`${site} 成立 于 ${year}`);
+```
+### 3. 模板字面量嵌套使用技巧
+
+字面量可以嵌套字面量
+
+![image-20220602003305460](img/image-20220602003305460.png)
+
+```js
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      ul {
+        list-style: none;
+      }
+      li {
+        padding: 10px;
+      }
+      li:nth-child(odd) {
+        background: #16a085;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      let str = "hdr.com";
+      str += " 后盾人";
+      console.log(str);
+
+      function show() {
+        return "hdr.com";
+      }
+      let hd = `www.${show()}`;
+      console.log(hd);
+
+      let lessons = [
+        { title: "媒体查询响应式布局" },
+        { title: "FLEX 弹性盒布局" },
+        { title: "GRID 栅格系统" },
+      ];
+      function template() {
+        return `<ul>${lessons
+          .map((item) => `<li>${item.title}</li>`)
+          .join("")}</ul>`;
+      }
+      document.body.innerHTML = template();
+    </script>
+  </body>
+</html>
+```
+### 4. 神奇的标签模板实例操作
+
+用函数处理模板字面量数据
+
+```js
+let name = "后盾人";
+let web = "hdr.com";
+console.log(tag`在线教程${name}，网址是${web}。`);
+function tag(strings, name, web) {
+    console.log(name);
+    console.log(web);
+}
+// 如果不确定变量是什么，使用...语法
+function show(strings, ...vars) {
+    // strings : 获取字面量中的字符串部分
+    // vars 将字面量中的变量收集到这一个变量中
+    console.log(vars);
+    console.log(strings);
+}
+console.log(show`${name}`);
+```
+给课程标题的`后盾人`关键字替换为`a标签`
+
+![image-20220602003157962](img/image-20220602003157962.png)
+
+```html
+<body>
+    <style>
+        ul {
+            list-style: none;
+        }
+
+        li {
+            border: solid 1px #ddd;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+
+        li>a {
+            color: green;
+        }
+    </style>
+    <script>
+        let lessons = [
+            { title: "后盾人媒体查询响应式布局", author: '后盾人向军' },
+            { title: "FLEX 弹性盒布局", author: '后盾人' },
+            { title: "GRID 栅格系统后盾人教程", author: '古老师' },
+        ];
+        function template() {
+            return `<ul>${lessons.map(item => links`<li>作者：${item.title}，课程${item.author}</li>`).join('')}</ul>`;
+        }
+        function links(strings, ...vars) {
+            return strings.map((str, key) => {
+                return str + (
+                    vars[key] ? vars[key].replace('后盾人', '<a href="hdr.com">后盾人</a>') : ''
+                );
+            }).join('');
+        }
+        document.body.innerHTML += template();
+    </script>
+</body>
+```
+
+> DATE：2022-06-01
+
+### 5. 字符串基本函数使用
+
+```js
+```
+### 6. 字符串截取操作
+```js
+```
+### 7. 检索字符串使用技巧
+```js
+```
+### 8. 字符串替换标题关键字
+```js
+```
+### 9. 电话号码模糊处理
+```js
+```
+### 10. 类型转换使用技巧
+```js
+```
+### 11. Boolean隐式转换原理
+```js
+```
+### 12. 显示转换Boolean类型
+```js
+```
+### 13. boolean实例操作
+```js
+```
+### 14. Number声明方式与基本函数
+```js
+```
+### 15. 数值类型转换技巧与NaN类型
+```js
+```
+### 16. Math数学计算
+```js
+```
+### 17. Math.random随机点名操作
+```js
+```
+### 18. 日期时间戳的使用与计算脚本执行时间
+```js
+```
+### 19. ISO与TIMESTAMP格式互换
+```js
+```
 
 
 
