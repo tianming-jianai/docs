@@ -26,7 +26,8 @@
 | 2022-05-20 | P15~P18  |   22:30~次日00:38 1h    |          |
 | 2022-05-25 | P15~P18  |   21:30~次日23:30 2h    |          |
 | 2022-05-26 | P19~P22  | 21:30~次日23:30 1h30min |          |
-| 2022-05-30 | P23~P27  |       22:40~00:30       |          |
+| 2022-05-30 | P23~P27  |     22:40~00:00 1h      |          |
+| 2022-06-01 | P28~P35  |   19:30~21:30 1h30min   |          |
 
 ## 测验
 
@@ -875,101 +876,185 @@ where e.salary >= j.lowest_sal and e.salary <= j.highest_sal;
 查询员工id、last_name 及其 管理者 的id、last_name
 
 ```mysql
-select e.employee_id,e.last_name,m.employee_id,m.last_name from employees e,employees m 
-where e.manager_id = m.employee_id;
+select e.employee_id,e.last_name,m.employee_id,m.last_name 
+from employees e,employees m 
+where e.manager_id = m.employee_id; # 106 rows
 ```
 
 > DATE：2022-05-31
 
+### 内连接 vs 外连接
+
+内连接：合并具有同一列的两个以上的表的行，结果集中不包含一个表与另一个表不匹配的行
+
+```mysql
+select employee_id,department_name 
+from employees e,departments d 
+where e.department_id = d.department_id; # 106 rows
+```
+
+外连接：合并具有同一列的两个以上表的行，结果集中除了包含一个表与另一个表匹配的行之外，还查询到了左表或右表中不匹配的行
+
+外连接的分类：左外连接、右外连接、满外连接
+
+左外连接：两个表在连接过程中除了返回满足连接条件的行意外还返回左表中不满足条件的行，这种连接称为左外连接。
+
+SQL92 语法实现外连接：使用 +
+
+```sql
+select last_name,department_name
+from employees e ,departments d 
+where e.department_id = d.department_id(+);
+```
+
+SQL99 语法中使用join ... on 的方式实现多表的查询。解决外连接查询，mysql支持此种方式
+
+- 内连接
+
+```mysql
+select last_name,department_name
+from employees e 
+join departments d 
+	on e.department_id = d.department_id;
+```
+
+- 多表内连接
+
+```mysql
+select last_name,department_name,city
+from employees e 
+join departments d 
+	on e.department_id = d.department_id
+join locations l
+	on d.location_id = l.location_id; # 106 rows
+```
+
+- 左外连接
+
+```mysql
+select last_name,department_name
+from employees e 
+left outer join departments d 
+on e.department_id = d.department_id; # 107 rows
+```
+
+- 右外连接
+
+```mysql
+select last_name,department_name
+from employees e 
+right outer join departments d 
+on e.department_id = d.department_id; # 122 rows 有部门没有人
+```
+
+- 满外连接
+
+MySQL不支持 full outer join
+
+### 使用SQL99实现7种join操作
+
+![image-20220601201831723](img/image-20220601201831723.png)
+
+### UNION的使用
+
+利用UNION关键字，可以给出多条SELECT语句，并将它们的结果组合成单个结果集。合并时，两个表对应的`列数`
+和`数据类型`必须相同，并且相互对应。各个SELECT语句之间使用UNION或UNION ALL关键字分隔。
+
+语法格式：
+
+```mysql
+select column1,... from table1
+union
+select column2,... from table2
+```
+
+- 中间
+
+```sql
+```
+
+- 左上
+
 ```mysql
 
 ```
 
-
-
-```mysql
-
-```
-
-
+- 右上
 
 ```mysql
 
 ```
 
-
-
-```mysql
-
-```
-
-
+- 左中
 
 ```mysql
 
 ```
 
-
-
-```mysql
-
-```
-
-
+- 右中
 
 ```mysql
 
 ```
 
-
-
-```mysql
-
-```
-
-
+- 左下
 
 ```mysql
 
 ```
 
-
-
-```mysql
-
-```
-
-
+- 右下
 
 ```mysql
 
 ```
 
+### natural join 与 using 的使用
 
-
-```mysql
-
-```
-
-
+SQL99在SQL92的基础上提供了一些特殊语法，比如`NATURAL JOIN` 用来表示自然连接。我们可以把自然连接
+理解为SQL92中的等值连接。它会帮你自动查询两张连接表中`所有相同的字段`，然后进行`等值连接`。
 
 ```mysql
-
+select last_name,department_name 
+from employees e join departments d
+on e.department_id = d.department_id
+and e.manager_id = d.manager_id;
 ```
 
-
+SQL99语法新特性：自然连接
+natural join：他会帮你自动查询两张表中所有相同的字段，然后进行等值连接
 
 ```mysql
-
+select last_name,department_name 
+from employees e natural join departments d
 ```
 
-
+SQL99语法新特性：using
+SQL99还支持使用USING指定数据表里的`同名字段`进行等值连接。但是只能配合JOIN一起使用。
 
 ```mysql
-
+select last_name,department_name 
+from employees e join departments d
+using(department_id);
 ```
 
+自连接一般是匹配同表中不同字段，不适用
 
+超过三张表不允许使用join
+
+## 课后练习：第六章
+
+1. 显示所有员工姓名、部门号、部门名称
+2. 查询90号部门员工job_id和90号部门location_id
+3. 选择所有有奖金的员工的last_name,department_name,location_id,city
+4. 选择city在Toronto工作的员工的last_name,job_id,department_id,department_name
+5. 查询员工所在的部门名称、部门地址、姓名、工作、工资，其中员工所在部门的部门名称为Executive
+6. 选择指定员工的姓名、员工号、以及管理者的姓名、员工号
+7. 查询哪些部门没有员工
+8. 查询哪个城市没有部门
+9. 查询部门名为Sales或IT的员工信息
+
+> DATE：2022-06-01
 
 ```mysql
 
