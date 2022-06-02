@@ -22,6 +22,7 @@
 | 2022-05-30 | 第一章：P1~P12<br />第二章：P1~P3 |   12:30~14:30  2h    |          |
 | 2022-05-31 |          第二章：P4~P14           |   20:00~22:00  2h    |          |
 | 2022-06-01 |           第三章：P1~P4           | 10:40~12:00  1h20min |          |
+| 2022-06-02 |          第三章：P5~P14           |   21:30~23:30  2h    |          |
 
 ## 第一章：走进 JAVASCRIPT 黑洞
 
@@ -931,56 +932,436 @@ console.log(show`${name}`);
 
 ### 5. 字符串基本函数使用
 
-```js
+```html
+  <body>
+		密码：<input type="password" name="password" />
+		<span>
+		</span>
+		<script>
+			let name = 'houDUNren'
+			console.log(name.length);
+			console.log(name.toUpperCase());
+			console.log(name.toLowerCase());
+
+			let site = '  houdunren    '
+			console.log(site.trim().length);
+
+			let ps = document.querySelector('[name=password]')
+			ps.addEventListener('keyup', function() {
+				this.value = this.value.trim()
+				let error = ''
+				let span = document.getElementsByTagName('span')
+				if (this.value.length < 5) {
+					error = '密码不能小于5位'
+				}
+				span[0].innerHTML = error
+			})
+
+			// 获取某个字符
+			let hd = 'houdunren'
+			console.log(hd[0]);
+			for (var i = 0; i < hd.length; i++) {
+				let span = document.createElement('span')
+				span.style.fontSize = (i + 1) * 10 + 'px'
+				span.innerHTML = hd[i]
+				document.body.append(span)
+			}
+		</script>
+	</body>
 ```
 ### 6. 字符串截取操作
 ```js
+let hd = 'houdunren.com'
+// slice substr substring
+
+// 只有一个证书参数时，效果相同
+console.log(hd.slice(1));
+console.log(hd.substring(1));
+console.log(hd.substr(1));
+
+// 两个正数参数时
+console.log(hd.slice(1, 3)); // 截取第一位到第三位
+console.log(hd.substring(1, 3)); // 同上
+console.log(hd.substr(1, 3)); // 截取3位
+
+// 第一位是负数,第二位数也是负数
+console.log(hd.slice(-3, -1)); // co
+console.log(hd.substring(-3, -1)); // 负数就从0开始,第二位是负数则截取不到数据
+console.log(hd.substr(-3, 2)); // co
 ```
 ### 7. 检索字符串使用技巧
 ```js
+const hd = 'houdunren.com'
+console.log(hd.indexOf('o')); // 1 从左边开始查找
+console.log(hd.indexOf('o', 8)); // 11 从左边的第八个字符查找
+console.log(hd.indexOf('@')); // 找不到返回 -1
+console.log(hd.indexOf('h')); // 起始位置是0
+
+// 是否包含某个字符
+// ES5
+if (hd.indexOf('h') != -1) {
+    console.log('找到了1');
+}
+// ES6
+if (hd.includes('h')) { // 返回布尔值
+    console.log('找到了2');
+}
+
+// 从右边开始查找
+console.log(hd.lastIndexOf('o'));
+console.log(hd.lastIndexOf('o', 8)); // 从第8个字符向前查找
+
+console.log(hd.startsWith('ho')); // 是否以某些字符开始，区分大小写
+console.log(hd.toLowerCase().startsWith('ho')); // 不区分大小写
+console.log(hd.endsWith('om')); // 以...为结尾
+
+// 是否出现了某些关键字
+const word = ['jav1a', 'javascript']
+const string = '我喜欢编程，尤其是java和javascript'
+// 短路与
+const status = word.some(item => {
+    console.log(item);
+    return string.includes(item);
+})
+console.log(status ? '找到了关键词' : '');
 ```
 ### 8. 字符串替换标题关键字
 ```js
+const hd = 'houdunren.com'
+console.log(hd.replace('houdunren', 'hdr'));
+
+// 替换字符串中的关键词为链接
+const word = ['java', 'javascript']
+const string = '我喜欢编程，尤其是java和javascript'
+const replaces = word.reduce((pre, next) => {
+    return pre.replace(next, `<a href='?w=${next}'>${next}</a>`)
+}, string)
+console.log(replaces);
+document.body.innerHTML += replaces
 ```
 ### 9. 电话号码模糊处理
 ```js
+console.log('*'.repeat(3));
+			
+function phone(mobile, len = 3){
+    return String(mobile).slice(0,len*-1)+'*'.repeat(len)
+}
+console.log(phone(98765432101,8));
+console.log(phone('98765432101',8));
 ```
 ### 10. 类型转换使用技巧
 ```js
+// 字符数字参与运算
+const string = '99'
+console.log(typeof string);
+console.log(string * 1 + 78);
+console.log(Number(string) + 78);
+
+// 数值转字符串
+const number = 66
+console.log(typeof number);
+const str = number + ''
+console.log(typeof str);
+console.log(typeof String(number));
+
+// 字符串转数字，只把前面是数字的转成功
+let strs = '99hdr'
+console.log(parseInt(string));
+strs = '99.99hdr'
+console.log(parseFloat(strs));
+
+// 字符串转数组
+const cms = 'hdcms'
+console.log(cms.split(''));
+
+// 数组转字符串
+const array = ['hdr', 'hdr.com', 'xj']
+console.log(array.join(' '));
+
+console.log('---------');
+// js中基本都是对象，对象和值类型都能调用方法
+let st = 'houdunren.com'
+console.log(typeof st);
+console.log(st.substr(3));
+
+let hc = new String('houdunren.com')
+console.log(typeof hc);
+console.log(hc.substr(3));
+// 原因：系统会将值类型隐式转换为对象进行调用
+
+const num = 99
+const newnum = num.toString()
+console.log(typeof newnum);
+console.log(newnum + 78);
 ```
 ### 11. Boolean隐式转换原理
 ```js
+// 对象形式
+let boolean = new Boolean(false)
+console.log(typeof boolean); // object
+console.log(boolean.valueOf());
+if(boolean.valueOf()){
+    console.log('hdr.com');
+}
+// 字面量形式 推荐
+boolean = true
+console.log(typeof boolean); // boolean
+if(boolean){
+    console.log('hdr');
+}
+
+let num = 99
+if(num){// 表达式运算时，不为0都为真
+    console.log(num);
+}
+// 数字和布尔值比较时，布尔值会转换为数值 true 1 false 0
+console.log(num == true); // false
+console.log(Boolean(num) == true); // true
+
+let array = []
+console.log(Number(array)); // 0
+console.log(array == 0); // true
+console.log(Boolean([])); // true
+if([]) console.log('hdr.com');
+
+console.log(Boolean({}));
+if({}) console.log('hdr.com');
+// 比较和转换是两个问题
 ```
+**结论：数字除了0都是真，字符串除了空字符都是真，引用类型都是真**
+
 ### 12. 显示转换Boolean类型
+
 ```js
+// 县式转换boolean类型
+let num = 0
+console.log(typeof num); // number
+num = !!num
+console.log(num); // false
+console.log(Boolean(num)); // false
+
+let string = 'hdr'
+console.log(!!string); // true
+console.log(Boolean(string)); // true
+
+let array = []
+console.log(!![]); // true
+console.log(Boolean([])); // true
+
+let obj = {}
+console.log(!!{}); // true
+console.log(Boolean({})); // true
+
+let date = new Date()
+console.log(!!date); // true
+console.log(Boolean(date)); // true
 ```
 ### 13. boolean实例操作
 ```js
+while (true) {
+    const year = prompt('后盾人是哪年成立的').trim()
+    if (!year) continue
+    console.log(year == '2010' ? '回答正确' : '回答错误');
+    break
+}
 ```
 ### 14. Number声明方式与基本函数
 ```js
+let num = new Number(99)
+console.log(typeof num); // object
+console.log(num.valueOf()+1); // 100
+
+num = 99
+console.log(typeof num); // number
+let hd = num.toString()
+console.log(typeof hd); // string
+
+num = 99.99
+console.log(Number.isInteger(num)); // false
+console.log(num.toFixed(1)); // 100.1
 ```
 ### 15. 数值类型转换技巧与NaN类型
 ```js
+// NaN Not a Number
+console.log(Number('hdr')); // NaN
+console.log(2 / 'hdr'); // NaN
+
+console.log(NaN == NaN); // false
+
+console.log(Number.isNaN(2 / 'hdr')); // true
+console.log(Object.is(2 / 'hdr', NaN)); // true
+
+// 转换
+console.log(Number(false));// 0
+let hd = '99'
+console.log(Number(hd)); // 99
+
+// 后台或表单都是字符串
+let num = document.querySelector('[name=num]').value
+console.log(typeof num); // string
+
+// 字符串以整数或小数开头
+let numstr = '89.99abc'
+console.log(Number(numstr)); // NaN
+console.log(parseInt(numstr)); // 89
+console.log(parseFloat(numstr)); // 89.99
+
+let arr = []
+console.log(Number(arr)); // 0
+arr = [1]
+console.log(Number(arr)); // 1
+arr = [1,2,3]
+console.log(Number(arr)); // NaN
+
+console.log(Number({})); // NaN
+console.log(Number({a:123})); // NaN
+console.log(Number({valueOf:function(){return 99}})); // 99
 ```
 ### 16. Math数学计算
 ```js
+// Math
+console.log(Math.min(1,2,3,4,5,)); // 1
+let grade = [12,3,2,124]
+// 不支持数组参数
+console.log(Math.max(grade)); // NaN
+console.log(Math.max.apply(null,grade)); // 124
+
+// 天花板
+console.log(Math.ceil(5.01)); // 6
+// 地板
+console.log(Math.floor(5.01)); // 5
+
+// 格式化
+console.log((95.556).toFixed(2)); // 95.56
+
+console.log(Math.round(5.56)); // 6
 ```
 ### 17. Math.random随机点名操作
 ```js
+// [0,1)
+console.log(Math.random());
+// 0 ~ 5     0 ~ 0.9  *5  Math.floor(0 5.4) 0 ~ 4
+console.log(Math.random() * 5);
+
+// 2 ~ 5
+// 公式：min + Math.floor(Math.random()*(Max - min + 1))
+console.log(2 + Math.floor(Math.random() * (5 - 2 + 1)));
+
+// 任意选择一个人
+const stus = ['zs', 'ls', 'ww', 'zl', 'xj']
+console.log(stus.length);
+console.log(stus[4]);
+
+// 0 ~
+let index = Math.floor(Math.random() * stus.length)
+console.log(stus[index]); // 随机任何一个名字
+
+// 2 ~ ww zl xj
+index = 2 + Math.floor(Math.random() * (stus.length - 2))
+console.log(stus[index]);
+
+// 2 ~ 3 ww zl
+index = 2 + Math.floor(Math.random() * (4 - 2))
+console.log(stus[index]);
+
+// 封装为函数
+function arrayRandomValue(array, start = 1, end) {
+    end = end ? end : array.length;
+    start--;
+    const index = start + Math.floor(Math.random() * (end - start))
+    console.log('index'+index);
+    return array[index];
+}
+console.log(arrayRandomValue(stus));
+console.log(arrayRandomValue([1,2,3,4,5],2,3));
 ```
 ### 18. 日期时间戳的使用与计算脚本执行时间
 ```js
+const date = new Date()
+console.log(date); // ISO 时间
+console.log(typeof date); // object
+console.log(date * 1); // 时间戳：毫秒数
+
+const hd = Date()
+console.log(hd); // ISO 时间
+console.log(typeof hd); // string
+console.log(hd * 1); // NaN
+
+// 直接获取时间戳
+let d = Date.now()
+console.log(d);
+
+// 计算时间差
+for (let i = 0; i < 100000000; i++) {}
+const end = Date.now()
+console.log((end - d) / 1000 + '秒'); // 0.246秒
+
+// 另一种计算时间差
+console.time('for')
+for (let i = 0; i < 100000000; i++) {}
+console.timeEnd('for'); // for: 100.155...
+
+// 操作日期
+d = new Date('1990-09-22 3:22:18')
+console.log(d); // ISO时间
+console.log(d.getMonth()); // 8
+
+d = new Date(1990, 2, 22, 13, 22, 11)
+console.log(d); // ISO 时间
+
+const param = [1990, 2, 22, 13, 22, 11]
+d = new Date(...param) // 数组展开
+console.log(d); // ISO 时间
 ```
 ### 19. ISO与TIMESTAMP格式互换
 ```js
+// 时间对象转换为时间戳
+const date = new Date('1990-09-22 3:22:18')
+console.log(date*1);
+console.log(Number(date));
+console.log(date.valueOf());
+console.log(date.getTime());
+
+// 时间戳转换为时间
+const timestamp = date.valueOf();
+console.log(new Date(timestamp));
 ```
 
+### 20. 封装日期格式函数
 
+```js
+const date = new Date('1990-09-22 3:22:18')
 
+function dateFormat(date, format = 'YYYY-MM-DD HH:mm:ss') {
+    const config = {
+        YYYY: date.getFullYear(),
+        MM: date.getMonth(),
+        DD: date.getDate(),
+        HH: date.getHours(),
+        mm: date.getMinutes(),
+        ss: date.getSeconds()
+    }
+    for (const key in config) {
+        format = format.replace(key, config[key])
+    }
+    return format;
+}
+console.log(dateFormat(date));
+```
 
+### 21. 优秀的日期处理库momentjs
 
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
+    console.log(moment('1990-09-22 03:22:18').format('YYYY-MM-DD HH:mm:ss'));
+    const date = moment('1990-09-22 03:22:18')
+    console.log(date.add(10, 'days').format('YYYY-MM-DD HH:mm:ss'));
+</script>
+```
 
+> 2022-06-02
 
 
 
