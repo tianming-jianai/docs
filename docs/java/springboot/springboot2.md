@@ -30,7 +30,7 @@ prev: /java/springboot/springboot
    java -jar springboot.jar
    ```
 
-注意事项：
+***注意事项***：
 jar支持命令行启动需要依赖maven插件支持，请确认打包时是否具有SpringBoot对应的maven插件
 
 ```xml
@@ -49,8 +49,6 @@ jar支持命令行启动需要依赖maven插件支持，请确认打包时是否
 1. SpringBoot工程可以基于java环境下独立运行jar文件启动服务
 2. SpringBoot工程执行mvn命令package进行打包
 3. 执行jar命令： java -jar工程名.jar
-
-
 
 ### SpringBoot打包插件
 
@@ -246,3 +244,260 @@ taskkill -f -t -im "进程名称"
 4. 基于微服务开发时配置文件将使用配置中心进行管理
 
 > DATE：2022-06-01
+
+## 03 多环境开发
+
+- 多环境开发（YAML版）
+- 多环境开发（Properties版）
+- 多环境开发控制
+
+### 多环境开发（YAML版）
+
+- 单文件多环境
+
+![image-20220602140509775](../img/image-20220602140509775.png)
+
+```yaml
+# 应用环境
+# 公共配置
+spring:
+  profiles:
+    active: test
+
+---
+# 设置环境
+# 生产环境
+#spring:
+#  profiles: pro
+server:
+  port: 80
+spring:
+  config:
+    activate:
+      on-profile: pro
+---
+# 设置环境
+# 生产环境
+#spring:
+#  profiles: dev
+server:
+  port: 81
+spring:
+  config:
+    activate:
+      on-profile: dev
+---
+# 设置环境
+# 生产环境
+#spring:
+#  profiles: test
+server:
+  port: 82
+spring:
+  config:
+    activate:
+      on-profile: test
+```
+
+- 过时格式、推荐格式
+
+![image-20220602140642125](../img/image-20220602140642125.png)
+
+**小结**
+
+1. 多环境开发需要设置若干种常用环境，例如开发、生产、测试环境
+2. yaml格式中设置多环境使用`---`区分环境设置边界
+3. 每种环境的区别在于加载的配置属性不同
+4. 启用某种环境时需要指定启动时使用该环境
+
+- 缺点：暴露配置信息，安全隐患
+
+![image-20220602140853897](../img/image-20220602140853897.png)
+
+---
+
+- 多环境开发多文件版（yaml版）
+
+![image-20220602141720824](../img/image-20220602141720824.png)
+
+**多环境开发配置文件书写技巧**（一）
+
+- 主配置文件中设置公共配置（全局)
+- 环境分类配置文件中常用于设置冲突属性（局部)
+
+**小结**
+
+1. 可以使用独立配置文件定义环境属性
+2. 独立配置文件使于线上系统维护史新井保障系统安全性
+
+### 多环境开发（Properties版）
+
+![image-20220602142118894](../img/image-20220602142118894.png)
+
+**小结**
+
+1. properties文件多环境配置`仅支持多文件格式`
+
+### 多环境分组管理
+
+**多环境开发独立配置文件书写技巧**（二）
+
+- 根据功能对配置文件中的信息进行拆分，并制作成独立的配置文件，命名规则如下
+  - application-devdb.yml
+  - application-devredis.yml
+  - application-devmvc.yml
+- 使用`include属性`在激活指定环境的情况下，同时对多个环境进行加载使其生效，多个环境间使用逗号分隔
+
+```yaml
+spring:
+  profiles:
+    active: dev
+    include: devdb,devmvc
+```
+
+***注意事项***：
+
+当主环境dev与其他环境有相同属性时，其它境属性失效；其他环境中有相同属性时，最后加载的环境属性生效
+
+- 从SpringBoot2.4版本开始使用`group属性`替代include属性，降低了配置书写量
+- 使用group属性定义多种主环境与子环境的包含关系
+
+```yaml
+spring:
+  profiles:
+    active: dev
+    group:
+      "dev": devdb,devmvc
+      "pro": prodb,promvc
+```
+
+**小结**
+
+1. 多环境开发使用group属性设置配置文件分组，便于线上维护管理
+
+### 多环境开发控制
+
+![image-20220602150325331](../img/image-20220602150325331.png)
+
+spring依赖maven运行，maven是主要配置
+
+- Maven与SpringBoot多环境兼容
+
+①：Maven中设置多环境属性
+
+```xml
+<profiles>
+    <profile>
+        <id>env_dev</id>
+        <properties>
+            <profile.active>dev</profile.active>
+        </properties>
+    </profile>
+
+    <profile>
+        <id>env_pro</id>
+        <properties>
+            <profile.active>pro</profile.active>
+        </properties>
+        <activation>
+            <activeByDefault>true</activeByDefault>
+        </activation>
+    </profile>
+</profiles>
+```
+
+②：SpringBoot中引用Maven属性
+
+```yaml
+spring:
+  profiles:
+    active: @profile.active@
+    group:
+      "dev": devdb,devmvc
+      "pro": prodb,promvc
+```
+
+③：执行Maven打包指令，并在生成的boot打包文件.jar文件中查看对应信息
+
+```yaml
+spring:
+  profiles:
+    active: pro
+    group:
+      "dev": devdb,devmvc
+      "pro": prodb,promvc
+```
+
+***注意事项***：
+idea开发，如果pom切换activeByDefault不生效，重新编译或刷新Maven即可修正
+
+linux环境下Maven通过源码编译、打包、部署不会出现这种问题
+
+**小结**
+
+1. 当Maven与SpringBoot同时对多环境进行控制时，以Mavn为主，SpringBoot使用@..@占位符读取Maven对应的配置属性值
+2. 基于SpringBoot读取Maven配置属性的前提下，如果在Idea下测试工程时pom.xml每次更新需要手动compile方可生效
+
+### 总结
+
+1. 多环境开发（YAML版)
+2. 多环境开发（ Properties版)
+3. Maven与SpringBoot多环境冲突现象解决方案
+
+## 04 日志
+
+- 日志基础
+- 日志输出格式控制
+- 日志文件
+
+### 日志基础操作
+
+- 日志（log）作用
+  - 编程期间调试代码
+  - 运营期间记录信息
+    - 记录日常运营重要信息（峰值流量、平均响应时长……)
+    - 记录应用报错信息（错误堆栈)
+    - 记录运维过程数据（扩容、宕机、报警……)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
