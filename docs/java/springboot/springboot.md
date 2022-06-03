@@ -34,17 +34,25 @@ next: /java/springboot/springboot2
 - 开始时间：2022-05-25
 - 结束时间：
 
-|    日期    | 课程编号 |       学习时长       | 复习时间 |
-| :--------: | :------: | :------------------: | :------: |
-| 2022-05-25 |  P1~P12  |   18:30~20:30  2h    |          |
-| 2022-05-26 | P13~P21  |   14:40~16:40  2h    |          |
-| 2022-05-27 | P22~P31  |   15:30~17:30  2h    |          |
-| 2022-05-28 | P32~P35  | 14:30~16:30  1h40min |          |
-| 2022-05-29 | P36~P42  |   14:20~16:20  2h    |          |
-| 2022-05-30 | P43~P48  |   18:50~20:50  2h    |          |
-| 2022-05-31 | P49~P53  |   13:30~15:30  2h    |          |
-| 2022-06-01 | P54~P60  |   14:40~16:40  2h    |          |
-| 2022-06-02 | P61~P69  |   13:50~15:50  2h    |          |
+|    日期    | 课程编号 |       学习时长       |
+| :--------: | :------: | :------------------: |
+| 2022-05-25 |  P1~P12  |   18:30~20:30  2h    |
+| 2022-05-26 | P13~P21  |   14:40~16:40  2h    |
+| 2022-05-27 | P22~P31  |   15:30~17:30  2h    |
+| 2022-05-28 | P32~P35  | 14:30~16:30  1h40min |
+| 2022-05-29 | P36~P42  |   14:20~16:20  2h    |
+| 2022-05-30 | P43~P48  |   18:50~20:50  2h    |
+| 2022-05-31 | P49~P53  |   13:30~15:30  2h    |
+| 2022-06-01 | P54~P60  |   14:40~16:40  2h    |
+| 2022-06-02 | P61~P69  |   13:50~15:50  2h    |
+
+- 复习
+
+| 日期       | 内容      |
+| ---------- | --------- |
+| 2022-06-03 | 基础篇ALL |
+|            |           |
+|            |           |
 
 > 学习经验：
 > 看视频就看视频，不要急着去扩展新的知识点，可以先记下来，否则有损学习进度
@@ -53,6 +61,23 @@ next: /java/springboot/springboot2
 
 - 题库
 
+## 课程介绍
+
+- 技术学习必要性
+
+  1. 市场占有率很高
+  2. 非常重要（https://spring.io）
+
+  Java开发者写程序必备技能，没有之一
+
+- 课程特色
+
+  1. 全网知识点内容最全
+  2. 内容理解最深入
+  3. 最高效学习路线设计
+
+  全网内容最全，技术最深入，源码解析最全面的课程
+
 ## 课程大纲
 
 - 基础篇
@@ -60,8 +85,7 @@ next: /java/springboot/springboot2
 - 应用篇
   - 补全知识树
   - 加强应用
-  - 提高能力
-  - 解决能力
+  - 提高问题解决能力
 - 原理篇
   - 提升理解层次
   - 能够自定义
@@ -117,16 +141,16 @@ next: /java/springboot/springboot2
     - 知道vue如何发送ajax请求，如何获取响应数据，如何进行数据模型双向绑定
 
 - 实用篇
-  - Linux ( centeroS7)
+  - Linux ( CenterOS7)
     - 熟悉常用的Linux基础指令，熟悉Linux系统目录结构
   - 实用开发技术
-    - 缓存:Redis、MongoDB、.....
-    - 消息中间件:RocketMq、RabbitMq、.…
+    - 缓存：Redis、MongoDB、.....
+    - 消息中间件：RocketMq、RabbitMq、.…
     - …
       .
 
 - 原理篇
-  - spring
+  - Spring
     - 了解Spring加载bean的各种方式
     - 知道Spring容器底层工作原理，能够阅读简单的Spring底层源码
 
@@ -145,8 +169,7 @@ SpringBoot是由Pivotal团队提供的全新框架，其设计目的是用来`�
 | Spring/SpringMVC配置类 | 手工制作 | 无         |
 | 控制器                 | 手工制作 | 手工制作   |
 
-1. 开发springBoot程序可以根据向导进行联网快速制作
-   公
+1. 开发SpringBoot程序可以根据向导进行联网快速制作
 2. SpringBoot程序需要基于JDK8进行制作
 3. SpringBoot程序中需要使用何种功能通过勾选选择技术
 4. 运行SpringBoot程序通过运行Application程序入口进行
@@ -174,7 +197,7 @@ SpringBoot是由Pivotal团队提供的全新框架，其设计目的是用来`�
   - Spring程序缺点
     - 依赖设置繁琐
     - 配置繁琐
-  - Spring Boot程序有点
+  - Spring Boot程序优点
     - 起步依赖（简化依赖配置）
     - 自动配置（简化常用工程相关配置）
     - 辅助功能（内置服务器，。。。）
@@ -211,8 +234,6 @@ spring-boot-starter-web.pom
   - 使用任意坐标时，仅书写GAV中的G和A，V由SpringBoot提供，除非SpringBoot未提供对应版本
   - 如发生坐标错误，再指定Version(要小心版本冲突)
 
-
-
 **小结**
 
 1. 开发SpringBoot程序需要导入坐标时通常导入对应的starter
@@ -238,7 +259,7 @@ public class Spring0101QuickstartApplication {
 }
 ```
 
-- SpringBoot的引导类是Boot工程的执行入口，运行main方法就可以启动项目
+- SpringBoot的引导类是Boot工程的执行入口，运行`main方法`就可以`启动项目`
 - SpringBoot工程运行后初始化Spring容器，扫描引导类所在包加载bean
 
 **小结**
@@ -267,7 +288,7 @@ public class Spring0101QuickstartApplication {
 </dependency>
 ```
 
-- Jetty 比 Tomcat更轻量级．可扩展性更强（相较于Tomcat)，谷歌应用引擎〔GAE)已经全面切换为Jetty
+- Jetty 比 Tomcat更轻量级．可扩展性更强（相较于Tomcat)，谷歌应用引擎（GAE）已经全面切换为Jetty
 
 **内置服务器**
 
@@ -281,18 +302,14 @@ public class Spring0101QuickstartApplication {
 2. 内嵌Tomcat工作原理是将Tomcat服务器作为对象运行，并将该对象交给Spring容器管理
 3. 变更内嵌服务器思想是去除现有服务器，添加全新的服务器
 
-
-
 ## 知识加油站：REST开发
-
-涉密课程:dog:
 
 ### REST 风格
 
 - REST简介
 - RESTful入门案例
 - REST快速开发
-- 案例:基于RESTful页面数据交互
+- 案例：基于RESTful页面数据交互
 
 ### REST 简介
 
@@ -323,11 +340,9 @@ public class Spring0101QuickstartApplication {
 | http: / / localhost/users   | 修改用户信息     | PUT(修改/更新)  |
 | http: / / localhost/users/1 | 删除用户信息     | DELETE (删除)   |
 
-> 注意：
->
-> 上述行为是约定方式，约定不是规范，可以打破，所以称REST风格，而不是REST规范
->
-> 描述模块的名称通常使用复数，也就是加s的格式描述，表示此类资源，而非单个资源，例如: users、books、account....
+***注意***：
+上述行为是约定方式，约定不是规范，可以打破，所以称REST风格，而不是REST规范
+描述`模块的名称`通常使用`复数`，也就是加s的格式描述，表示此类资源，而非单个资源，例如： users、books、account....
 
 **小结**
 
@@ -381,11 +396,11 @@ public class UserController {
 ### @RequestBody @RequestParam @PathVariable
 
 - 区别
-  - @RequestParam用于接收url地址传参或表单传参
-  - @RequestBody用于接收json数据
-  - @PathVariable用于接收路径参数，使用{参数名称}描述路径参数
+  - @RequestParam用于接收`url地址`传参或`表单`传参
+  - @RequestBody用于接收`json`数据
+  - @PathVariable用于接收`路径`参数，使用`{参数名称}`描述路径参数
 - 应用
-  - 后期开发中，发送请求参数超过1个时，以json格式为主，@RequestBody应用较广
+  - 后期开发中，发送请求参数**超过1个时**，以json格式为主，@RequestBody应用较广
   - 如果发送非json格式数据，选用@RequestParam接收请求参数
   - 采用RESTful进行开发，当参数数量较少时，例如1个，可以采用@PathVariable接收请求路径变量，通常用于传递id值
 
@@ -431,8 +446,12 @@ public class BookController {
 **小结**
 
 1. RESTful快速开发（标准开发）
+
 2. @RestController
+
 3. 标准请求动作映射（4种）
+
+   @PostMapping、@DeleteMapping、@PutMapping、@GetMapping
 
 ## 02 基础配置
 
@@ -447,11 +466,19 @@ public class BookController {
   - 保留工程基础结构
   - 抹掉原始工程痕迹
 
+![image-20220603155934021](../img/image-20220603155934021.png)
+
+```xml
+<groupId>com.itheima</groupId>
+<artifactId>spring_0x_0x_xxxxxxxxx</artifactId>
+<version>0.0.1-SNAPSHOT</version>
+```
+
 **小结**
 
 1. 在工作空间中复制对应工程，并修改工程名称
 2. 删除与Idea相关配置文件，仅保留src目录与pom. xml文件
-3. 修改pom. xm1文件中的artifactId与新工程/模块名相同
+3. 修改pom. xml文件中的artifactId与新工程/模块名相同
 4. 删除name标签(可选)
 5. 保留备份工程供后期使用
 
@@ -478,11 +505,9 @@ logging.level.root=info
 logging.level.com.itheima=warn
 ```
 
-
-
 - SpringBoot内置属性查询
 
-官方文档中参考文档第一项: Application Properties
+官方文档中参考文档第一项： Application Properties
 
 [SpringBoot所有配置](https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html)
 
@@ -505,10 +530,7 @@ SpringBoot提供了3种配置文件的格式
 
 `.properties > .yml > yaml`
 
-不同配置文件中相同配置按照加载优先级相互覆盖，不同配
-置文件中不同配置全部保留
-
-
+不同配置文件中相同配置`按照加载优先级相互覆盖`，不同配置文件中不同配置全部保留
 
 ### 自动提示功能消失解决方案
 
@@ -518,30 +540,28 @@ SpringBoot提供了3种配置文件的格式
    - Customize Spring Boot
    - 选择配置文件
 
+![image-20220603160916826](../img/image-20220603160916826.png)
+
 ### yaml
 
-- YAML (YAML Ain't Markup Language) ，-种数据序列化格式
-- 优点:
+- YAML (YAML Ain't Markup Language) ，一种数据序列化格式
+- 优点：
   - 容易阅读
-    - 容易与脚本语言交互 .
-    - 以数据为核心, 重数据轻格式
+    - 容易与脚本语言交互
+    - 以数据为核心，重数据轻格式
   - YAML文件扩展名
     - `.yml (主流)`
     - . yaml
-
-
 
 **语法规则**
 
 - 大小写敏感
 - 属性层级关系使用多行描述，每行结尾使用冒号结束
-- 使用缩进表示层级关系，同层级左侧对齐，只允许使用空格(不允许使用Tab键)
-- 属性值前面添加空格(属性名与属性值之间使用冒号+空格作为分隔)
+- 使用缩进表示层级关系，同层级左侧对齐，只允许使用空格（不允许使用Tab键）
+- 属性值前面添加空格（属性名与属性值之间使用冒号+空格作为分隔）
 - #表示注释
 
 核心规则：`数据前面要加空格与冒号隔开`
-
-
 
 - 字面值表示方式
 
@@ -582,13 +602,12 @@ SpringBoot提供了3种配置文件的格式
 
 1. yaml语法规则
    - 大小写敏感
-   - 属性层级关 系使用多行描述，每行结尾使用冒号结束
-   - 使用缩进表示层级关系, 同层级左侧对齐,只允许使用空格(不允许
-     使用Tab键)
-   - 属性值前面添加空格( 属性名与属性值之间使用冒号+空格作为分隔)
+   - 属性层级关系使用多行描述，每行结尾使用冒号结束
+   - 使用缩进表示层级关系， 同层级左侧对齐，只允许使用空格（不允许使用Tab键）
+   - 属性值前面添加空格（ 属性名与属性值之间使用冒号+空格作为分隔）
    - #表示注释
 2. 注意属性名冒号后面与数据之间有一个空格
-3. 字面值、对象数据格式、数组数据格式(略)
+3. 字面值、对象数据格式、数组数据格式（略）
 
 > DATE：2022-05-26
 
@@ -656,10 +675,10 @@ public class BookController {
 
 **小结**
 
-1. 在配置文件中可以使用${属性名}方式引用属性值
-2. 如果属性出现特殊符号，可以使用`双引号`包裹起来作为字符解析
+1. 在配置文件中可以使用`${属性名}`方式引用属性值
+2. 如果属性出现`特殊符号`，可以使用`双引号`包裹起来作为字符解析
 
-2. **封装全部数据到Environment对象**
+2. **封装全部数据到`Environment`对象**
 
 ```java
 	@Autowired
@@ -678,8 +697,6 @@ public class BookController {
 1. 使用Environment对象封装全部配置信息
 2. 使用@Autowired自动装配数据到Environment对象中
 
-
-
 3. **自定义对象封装指定数据**
 
 ```yaml
@@ -687,7 +704,7 @@ datasource:
   driver: com.mysql.cj.jdbc.Driver
   url: jdbc:mysql://localhost/springboot_db
   username: root
-  password: root666
+  password: root
 ```
 
 ```java
@@ -722,10 +739,8 @@ public String getAll() {
 
 **小结**
 
-1. 实用@ConfigurationProperties注解绑定撇子信息到封装类中
+1. 实用@ConfigurationProperties注解绑定配置信息到封装类中
 2. 封装类需要定义为Spring管理的bean，否则无法进行属性注入
-
-
 
 ## 03 整合第三方技术
 
@@ -738,9 +753,9 @@ public String getAll() {
 
 **小结**
 
-1. 导入测试对应的starter
+1. 导入测试对应的starter `spring-boot-starter-test`
 2. 测试类实用`@SpringBootTest`修饰
-3. 实用自动装配的形式添加要测试的对象
+3. 使用自动装配的形式添加要测试的对象
 
 - 名称：@SpringBootTest
 
@@ -805,8 +820,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/ssm_db
-    username: zhangsan
-    password: 2233
+    username: root
+    password: root
 ```
 
 定义数据层接口与映射配置
@@ -837,10 +852,19 @@ void contextLoads() {
 2. 数据库连接相关信息转换成配置
 3. 数据库SQL映射需要添加@Mapper被容器识别到
 
+补充：
+`#{}`：解析为一个 JDBC 预编译语句（prepared statement）的参数标记符，一个 #{ } 被解析为一个参数`占位符` 。
+`${}`：仅仅为一个纯碎的 `string 替换`，在动态 SQL 解析阶段将会进行变量替换。
+
+**常见问题处理**
+
+1. 时区 [参考](https://cloud.tencent.com/developer/article/1913544)
+2. 驱动
+
 **小结**
 
 1. MySQL 8.X驱动强制要求设置时区
-   - 修改url，添加`?serverTimezone=UTC`设定
+   - 修改url，添加`?serverTimezone=UTC`设定，其他：GMT+8、Asia/Shanghai、CTT就是中国
    - 永久解决方案，修改MySQL数据库配置（略)
 2. 驱动类过时，提醒更换为`com.mysql.cj.jdbc.Driver`
 
@@ -850,7 +874,7 @@ void contextLoads() {
   - 导入坐标不同
   - 数据层实现简化
 
-1. 手动昂添加lSpringBoot整合MyBatis-Plus的坐标，可以通过mvnrepository获取
+1. 手动添加lSpringBoot整合MyBatis-Plus的坐标，可以通过mvnrepository获取
 
 ```xml
 <dependency>
@@ -912,8 +936,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/test
     username: root
-    password: 2233
-    type: com.alibaba.druid.pool.DruidDataSource
+    password: root
+    type: com.alibaba.druid.pool.DruidDataSource # 配置数据源的类型
 ```
 
 **变更Druid的配置方式**
@@ -925,7 +949,7 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://localhost:3306/test
       username: root
-      password: 2233
+      password: root
 ```
 
 ### 整合第三方技术
@@ -947,7 +971,7 @@ spring:
 
 - ### 案例效果演示
 
-TODO
+![image-20220603170008824](../img/image-20220603170008824.png)
 
 ### 案例实现方案分析
 
@@ -956,7 +980,7 @@ TODO
 - Dao开发——整合MyBatisPlus，制作数据层测试类
 
 - Service开发——基于MyBatisPlus进行增量开发，制作业务层测试类
-- Controller开发——基于Restful开发，使用PostMan测试接口功能
+- Controller开发——基于Restful开发，使用PostMan、Curl测试接口功能
 - Controller开发——前后端开发协议制作
 
 - 页面开发——基于VUE+ElementUI制作，前后端联调，页面数据处理，页面消息处理
@@ -1004,7 +1028,7 @@ public class Book {
 快速查看实体类属性方法：`Ctrl + F12`
 
 - 常用注解 @Data
-- 为当前实体类在编译期设置对应的get/set方法，toString方法，hashCode方法，equales方法
+- 为当前实体类在编译期设置对应的get/set方法，toString方法，hashCode方法，equals方法
 
 **小结**
 
@@ -1031,9 +1055,10 @@ public class Book {
 ```
 
 ```sql
+# 插曲：修改表名、设置主键、设置自增
 alter table book rename to tbl_book;
 alter table tbl_book change id id int primary key;
-alter table tbl_book change id id auto_increment;
+alter table tbl_book change id id auto_increment; # 必须有主键才能自增
 ```
 
 - 配置数据源与MybaPlus对应的基础配置（id生成策略使用数据库自增策略）
@@ -1045,7 +1070,7 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://localhost:3306/test
       username: root
-      password: 2233
+      password: root
       
 mybatis-plus:
   global-config:
@@ -1129,28 +1154,28 @@ mybatis-plus:
 
 1. 使用配置方式开启日志，设置日志输出方式为标准输出
 
-注意：禁止上线开启
+注意：**禁止上线开启日志功能**
 
 ### 分页
 
 - 分页操作需要设定分页对象IPage
 
 ```java
-IPage page = new Page(1,3);
+IPage page = new Page(1, 3);
 bookDao.selectPage(page,null);
 ```
 
 - IPage对象中封账了分页操作中的所有数据
-  - 数据
-  - 每页数据总量
-  - 最大页码值
-  - 数据总量
+  - 数据 records
+  - 每页数据总量 size
+  - 最大页码值 pages
+  - 数据总量 total
 
 ```java
 @Test
 public void testGetPage() {
-    IPage page = new Page(1,3);
-    bookDao.selectPage(page,null);
+    IPage page = new Page(1, 3);
+    bookDao.selectPage(page,null); // 查询结果会封装在page对象里面
     List records = page.getRecords(); // 数据
     System.out.println(page.getCurrent()); // 当前页
     System.out.println(page.getSize()); // 单页显示数量
@@ -1182,7 +1207,7 @@ public class MPConfig {
 
 ### 数据层标准开发（条件查询）
 
-- 使用QueryWrapper对象封装查询条件，推荐使用LambdaQueryWrapper对象，所有查询操作封装成方法调用
+- 使用`QueryWrapper`对象封装查询条件，推荐使用`LambdaQueryWrapper`对象，所有查询操作封装成方法调用
 
 ```java
 @Test
@@ -1191,7 +1216,7 @@ public void testGetBy() {
     queryWrapper.like("name", "Java");
     bookDao.selectList(queryWrapper);
 
-    String name = "o";
+    String name = "o";// 减少字面量使用，封装性更好
     LambdaQueryWrapper<Book> lambdaQueryWrapper = new LambdaQueryWrapper<>();
     lambdaQueryWrapper.like(StringUtils.hasText(name), Book::getName, name);
     bookDao.selectList(lambdaQueryWrapper);
@@ -1290,19 +1315,15 @@ class BookServiceImplTest {
     ...
 ```
 
-
-
 业务层方法`必须写测试用例`
 快速创建该类的测试类：`Ctrl + Shift + T` 
 
-将业务层都定义为操作状态，成功或失败，而不是影响了多少数据，那是数据层的工作，业务层都是逻辑规则
+将业务层都定义为`操作状态`，成功或失败，而不是影响了多少数据，那是数据层的工作，业务层都是`逻辑规则`
 
 **小结**
 
-1. Service接口名称定义成业务名称，并与Dao接口名称进行区分心
+1. Service接口名称定义成业务名称，并与Dao接口名称进行区分
 2. 制作测试类测试service功能是否有效
-
-
 
 ### 业务层快速开发（基于MyBatisPlus）
 
@@ -1414,14 +1435,13 @@ public class BookController {
     # delete
     curl -X DELETE http://localhost/books/1
     # getById
-    curl http://localhost/books/11
+    curl localhost/books/11
     # getAll
-    curl http://localhost/books
+    curl localhost/books
     # getByPage
-    curl http://localhost/books/1/5
+    curl localhost/books/1/5
     ```
 
-    
 
 **小结**
 
@@ -1454,13 +1474,9 @@ public class BookController {
 
 缺点：前端人员拿到数据格式乱七八糟
 
-
-
 `改正：操作结果统一格式`
 
 ![image-20220529160907790](../img/image-20220529160907790.png)
-
-
 
 - 设计表现层返回结果的模型类，用于后端与前端进行数据格式统一，也称为`前后端数据协议`
 
@@ -1514,15 +1530,15 @@ public class BookController2 {
     }
 
     @GetMapping("/{current}/{size}")
-    public IPage<Book> getByPage(@PathVariable int current, @PathVariable int size) {
-        return bookService.page(current, size);
+    public R getByPage(@PathVariable int current, @PathVariable int size) {
+        return new R(true, bookService.page(current, size));
     }
 }
 ```
 
 **小结**
 
-1. 设计统一的返回值结果类型便于前端开发读取数据
+1. 设计`统一的返回值`结果类型便于前端开发读取数据
 2. 返回值结果类型可以根据需求自行设定，没有固定格式
 3. 返回值结果模型类用于后端与前端进行数据格式统一，也称为前后端数据协议
 
@@ -1541,8 +1557,6 @@ getAll() {
     })
 }
 ```
-
-
 
 **小结**
 
@@ -1597,9 +1611,7 @@ resetForm() {
 ```js
 // 添加
 handleAdd() {
-    axios
-        .post("/books", this.formData)
-        .then((res) => {
+    axios.post("/books", this.formData).then((res) => {
         if (res.data.flag) {
             // 1. 关闭弹层
             this.dialogFormVisible = false;
@@ -1607,8 +1619,7 @@ handleAdd() {
         } else {
             this.$message.success("添加失败");
         }
-    })
-        .finally(() => {
+    }).finally(() => {
         // 2. 加载数据
         this.getAll();
     });
@@ -1643,23 +1654,18 @@ handleDelete(row) {
 
     this.$confirm("此操作永久删除当前信息，是否继续？", "提示", {
         type: "info",
-    })
-        .then(() => {
+    }).then(() => {
         // console.log('success');
-        axios
-            .delete("/books/" + row.id)
-            .then((res) => {
+        axios.delete("/books/" + row.id).then((res) => {
             if (res.data.flag) {
                 this.$message.success("删除成功");
             } else {
                 this.$message.error("删除失败");
             }
-        })
-            .finally(() => {
+        }).finally(() => {
             this.getAll();
         });
-    })
-        .catch(() => {
+    }).catch(() => {
         this.$message.info("取消操作");
     });
 },
@@ -1680,9 +1686,7 @@ handleDelete(row) {
 ```js
 // 弹出编辑窗口
 handleUpdate(row) {
-    axios
-        .get("/books/" + row.id)
-        .then((res) => {
+    axios.get("/books/" + row.id).then((res) => {
         if (res.data.flag) {
             // 展示弹层，加载数据
             this.formData = res.data.data;
@@ -1690,8 +1694,7 @@ handleUpdate(row) {
         } else {
             this.$message.error("数据同步失败，自动刷新");
         }
-    })
-        .finally(() => {
+    }).finally(() => {
         this.getAll();
     });
 },
@@ -1699,30 +1702,25 @@ handleUpdate(row) {
 
 - 删除消息维护
 
-```js{16}
+```js
 // 删除
 handleDelete(row) {
     // console.log(row);
 
     this.$confirm("此操作永久删除当前信息，是否继续？", "提示", {
         type: "info",
-    })
-        .then(() => {
+    }).then(() => {
         // console.log('success');
-        axios
-            .delete("/books/" + row.id)
-            .then((res) => {
+        axios.delete("/books/" + row.id).then((res) => {
             if (res.data.flag) {
                 this.$message.success("删除成功");
             } else {
                 this.$message.error("数据同步失败，自动刷新");
             }
-        })
-            .finally(() => {
+        }).finally(() => {
             this.getAll();
         });
-    })
-        .catch(() => {
+    }).catch(() => {
         this.$message.info("取消操作");
     });
 },
@@ -1738,9 +1736,7 @@ handleDelete(row) {
 ```js
 // 修改
 handleEdit() {
-    axios
-        .put("/books", this.formData)
-        .then((res) => {
+    axios.put("/books", this.formData).then((res) => {
         if (res.data.flag) {
             // 1. 关闭弹层
             this.dialogFormVisible4Edit = false;
@@ -1748,8 +1744,7 @@ handleEdit() {
         } else {
             this.$message.error("修改失败");
         }
-    })
-        .finally(() => {
+    }).finally(() => {
         this.getAll();
     });
 },
@@ -1809,12 +1804,12 @@ cancel() {
 
 - 对异常进行统一处理，出现异常后，返回指定信息
 
-```java{2,5}
+```java
 // 作为SpringMVC的异常处理器
 @RestControllerAdvice
 public class ProjectExceptionAdvice {
     // 拦截所有异常信息
-    @ExceptionHandler
+    @ExceptionHandler// 可以根据需要处理的异常进行自定义
     public R doException(Exception ex) {
         // 记录日志
         // 通知运维
@@ -1824,12 +1819,12 @@ public class ProjectExceptionAdvice {
 }
 ```
 
-- 修改表现层返回结果，封装异常后对应的信息
+- 修改表现层返回结果，封装异常后对应的`信息`
   - flag：false
-  - Data：null
+  - data：null
   - 消息(msg)：要显示信息
 
-```java{6,17,22}
+```java
 @Data
 @NoArgsConstructor
 public class R {
@@ -1860,21 +1855,18 @@ public class R {
 
 - 页面消息处理，没有传递消息加载默认消息，传递消息后加载指定消息
 
-```js{9}
+```js
  // 添加
 handleAdd() {
-    axios
-        .post("/books", this.formData)
-        .then((res) => {
+    axios.post("/books", this.formData).then((res) => {
         if (res.data.flag) {
             // 1. 关闭弹层
             this.dialogFormVisible = false;
             this.$message.success("添加成功");
         } else {
-            this.$message.success(res.data.msg);
+            this.$message.error(res.data.msg);
         }
-    })
-        .finally(() => {
+    }).finally(() => {
         // 2. 加载数据
         this.getAll();
     });
@@ -1883,7 +1875,7 @@ handleAdd() {
 
 - 可以在表现层Controller中进行消息统一处理
 
-```java{9}
+```java
 @PostMapping
 public R save(@RequestBody Book book) throws IOException {
     if ("123".equals(book.getName())) {
@@ -1896,25 +1888,22 @@ public R save(@RequestBody Book book) throws IOException {
 }
 ```
 
-目的：**国际化**
+目的：**国际化**?
 
 - 页面消息处理
 
-```js{9}
+```js
  // 添加
 handleAdd() {
-    axios
-        .post("/books", this.formData)
-        .then((res) => {
+    axios.post("/books", this.formData).then((res) => {
         if (res.data.flag) {
             // 1. 关闭弹层
             this.dialogFormVisible = false;
             this.$message.success(res.data.msg);// 消息全部由后台管理
         } else {
-            this.$message.success(res.data.msg);
+            this.$message.error(res.data.msg);
         }
-    })
-        .finally(() => {
+    }).finally(() => {
         // 2. 加载数据
         this.getAll();
     });
@@ -1923,11 +1912,9 @@ handleAdd() {
 
 **小结**
 
-1. 使用注解@RestControllerAdvice定义SpringMVC`异常处理器`用来处理异常的
+1. 使用注解`@RestControllerAdvice`定义SpringMVC`异常处理器`用来处理异常的
 2. 异常处理器必须被`扫描`加载，否则无法生效
-3. 表现层返回结果的模型类中添加`消息属性`msg用来传递消息到页面
-
-
+3. 表现层返回结果的模型类中添加`消息属性msg`用来传递消息到页面
 
 ### 分页
 
@@ -1936,8 +1923,7 @@ handleAdd() {
 ```html
 <!--分页组件-->
 <div class="pagination-container">
-    <el-pagination
-                   class="pagiantion"
+    <el-pagination class="pagiantion"
                    @current-change="handleCurrentChange"
                    :current-page="pagination.currentPage"
                    :page-size="pagination.pageSize"
@@ -1966,9 +1952,8 @@ data:{
 // 分页查询
 getAll() {
     axios.get("/books/" +this.pagination.currentPage +
-              "/" +this.pagination.pageSize
-             )
-        .then((res) => {
+              "/" +this.pagination.pageSize)
+    .then((res) => {
         
     });
 },
@@ -2000,6 +1985,8 @@ getAll() {
             this.pagination.pageSize = res.data.data.size;
             this.pagination.total = res.data.data.total;
             this.dataList = res.data.data.records;
+        } else {
+            this.$message.error(res.data.msg);
         }
     });
 },
@@ -2049,8 +2036,6 @@ public R getByPage(@PathVariable int current, @PathVariable int size) {
 
 1. 基于业务需求维护删除功能
 
-
-
 ### 条件查询
 
 - 查询条件数据封装
@@ -2094,26 +2079,21 @@ getAll() {
     param += "&type=" + this.pagination.type;
     param += "&description=" + this.pagination.description;
     console.log("-------------" + param);
-    axios
-        .get(
-        "/books/" +
-        this.pagination.currentPage +
-        "/" +
-        this.pagination.pageSize +
-        param
-    )
-        .then((res) => {
+    axios.get("/books/" + this.pagination.currentPage +
+        "/" + this.pagination.pageSize + param ).then((res) => {
         if (res.data.flag) {
             this.pagination.currentPage = res.data.data.current;
             this.pagination.pageSize = res.data.data.size;
             this.pagination.total = res.data.data.total;
             this.dataList = res.data.data.records;
+        } else {
+            this.$message.error(res.data.msg);
         }
     });
 },
 ```
 
-条件数据可以根据条件判断写的更简洁
+扩展：条件数据可以根据条件判断写的更简洁
 
 - Controller接收参数
 
@@ -2121,11 +2101,7 @@ getAll() {
 @GetMapping("/{current}/{size}")
 public R getByPage(@PathVariable int current, @PathVariable int size, Book book) {
     System.out.println("请求参数：" + book);
-    IPage<Book> page = bookService.page(current, size, book);
-    // 如果当前页码大于总页码值，那么重新执行查询，使用最大页码值作为当前页码值
-    if (current > page.getPages()) {
-        page = bookService.page((int) page.getPages(), size, book);
-    }
+    
     return new R(null != page, page);
 }
 ```
@@ -2222,8 +2198,6 @@ public R getByPage(@PathVariable int current, @PathVariable int size, Book book)
 3. 整合MyBatis-Plus
 4. 整合Druid
 5. 基于springBoot的SSMP整合案例
-
-
 
 ### 后续学习
 
