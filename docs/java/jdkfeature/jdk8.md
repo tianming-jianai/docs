@@ -29,7 +29,7 @@ next: /java/
 |    日期    | 课程编号 | 学习时长 |
 | :--------: | :------: | :------: |
 | 2022-08-13 |  P1~P10  |    2h    |
-|            |          |          |
+| 2022-08-13 | P11~P13  |  40min   |
 |            |          |          |
 
 - 复习
@@ -338,4 +338,212 @@ public void test7() {
     System.out.println(func2.apply(employee));
 }
 ```
+
+#### 构造器引用
+
+和方法引用类似，函数式接口的抽象方法的形参列表和构造器的形参列表一致抽象方法的返回值类型即为构造器所属的类的类型
+
+```java
+/**
+* 构造器引用
+* Supplier T get()
+* Employee Employee()
+*/
+@Test
+public void test1() {
+    Supplier<Employee> sup = new Supplier<Employee>() {
+        @Override
+        public Employee get() {
+            return new Employee();
+        }
+    };
+    System.out.println(sup.get());
+
+    Supplier<Employee> sup2 = () -> new Employee();
+    System.out.println(sup2.get());
+
+    Supplier<Employee> sup3 = Employee::new;
+    System.out.println(sup3.get());
+}
+
+/**
+* Function R apply(T t)
+*/
+@Test
+public void test2() {
+    Function<Integer, Employee> func = id -> new Employee(id);
+    Employee apply = func.apply(1001);
+    System.out.println(apply);
+    Function<Integer, Employee> func2 = Employee::new;
+    Employee apply2 = func2.apply(1002);
+    System.out.println(apply2);
+}
+
+/**
+* BiFunction R apply(T t, U u)
+*/
+@Test
+public void test3() {
+    BiFunction<Integer, String, Employee> func = (id, name) -> new Employee(id, name);
+    Employee tom = func.apply(1001, "Tom");
+    System.out.println(tom);
+
+    BiFunction<Integer, String, Employee> func2 = Employee::new;
+    Employee jack = func2.apply(1002, "Jack");
+    System.out.println(jack);
+}
+```
+
+#### 数组引用
+
+大家可以把数组看做是一个特殊的类，则写法与构造器引用一致。
+
+```java
+/**
+* 数组引用
+* Function R apply(T t)
+*/
+@Test
+public void test4() {
+    Function<Integer, String[]> func = length -> new String[length];
+    String[] apply = func.apply(5);
+    System.out.println(Arrays.toString(apply));
+
+    Function<Integer, String[]> func2 = String[]::new;
+    System.out.println(Arrays.toString(func2.apply(6)));
+}
+```
+
+## 二、Stream API
+
+### 强大的Stream API
+
+- Java8有两大最重要的改变。第一个是**Lambda表达式**；另一个则是**Stream API**。
+- **Stream API（java.util.stream）**把真正的函数式编程风格引入到Java中。这是目前为止对Java类库最好的补充，因为Stream API可以极大提供java程序员的生产力，让程序员写出高效率、干净、简洁的代码。
+- Stream 是 Java8中处理集合关键抽象概念，它可以指定你希望对集合进行的操作，可以执行非常复杂的查找、过滤和映射数据等操作。**使用Stream API对集合数据进行操作，就类似于使用SQL执行的数据库查询。**也可以使用Stream API来并行执行操作。简言之，Stream API提供了一种高效且易于使用的处理数据的方式。
+
+### 为什么使用Stream API
+
+- 实际开发中，项目中多数数据都来源于MySQL、Oracle等。但现在数据源可以更多了，有MongoDB、Redis等，而这些NoSQL的数据就需要Java层面去处理。
+- Stream和Collection集合的区别：**Collection是一种静态的内存数据结构，而Stream是有关计算的**。前者主要面向存储，存储在内存中，后者主要面向CPU，通过CPU实现计算。
+
+### 什么是Stream
+
+**Stream到底是什么呢？**
+
+是数据渠道，用于操作数据源（集合、数组等）所生成的元素序列。
+“集合讲的是数据，Stream讲的是计算！”
+
+注意：
+① Stream不会自己存储元素
+② Stream不会改变源对象。相反，他们会返回一个持有结果的新Stream
+③ Stream操作是延迟执行的。这意味着他们会等到需要结果的时候再执行。
+
+### Stream的操作的三个步骤
+
+- 创建Stream
+  - 一个数据源，获取一个流
+- 中间操作
+  - 一个中间操作，对数据源的数据进行处理
+- 终止操作
+  - 一旦执行终止操作，就执行中间操作链，并产生结果。之后，不会再被使用。
+
+
+
+### 创建Stream（4种）
+
+#### 1. 通过集合
+
+Java8中的Collection接口被扩展，提供了两个获取流的方法：
+
+```java
+default Stream<E> stream() 返回一个顺序流
+default Stream<E> parallelStream() 返回一个并行流
+```
+
+#### 2. 通过数组
+
+Java8中的Arrays的静态方法stream()可以获取数组流
+
+```java
+public static <T> Stream<T> stream(T[] array) 返回一个流
+// 重载形式
+public static IntStream stream(int[] array)
+public static LongStream stream(long[] array)
+public static DoubleStream stream(double[] array)
+```
+
+#### 3. 通过Stream的of()
+
+可以调用Stream类静态方法of()，通过显示值创建一个流。它可以接收任意数量的参数。
+
+```java
+public static<T> Stream<T> of(T... values)
+```
+
+#### 4. 创建无限流（用的较少，了解）
+
+可以使用静态方法Stream.iterate() 和 Stream.generate() 创建无限流
+
+```java
+// 迭代
+public static<T> Stream<T> iterate(final T seed, final UnaryOperator<T> f)
+// 生成
+public static<T> Stream<T> generate(Supplier<? extends T> s)
+```
+
+```java
+public class StreamAPITest {
+
+    List<Employee> employees = null;
+
+    @BeforeEach
+    public void beforeEach() {
+        employees = EmployeeData.getEmployees();
+    }
+
+    /**
+     * 创建Stream方式一：通过集合
+     */
+    @Test
+    public void test1() {
+        Stream<Employee> stream = employees.stream();
+        Stream<Employee> stream1 = employees.parallelStream();
+    }
+
+    /**
+     * 创建Stream方式二：通过数组
+     */
+    @Test
+    public void test2() {
+        int[] arr = new int[]{1, 2, 3, 4, 5, 6};
+        IntStream stream = Arrays.stream(arr);
+
+        Employee[] arr1 = new Employee[]{employees.get(0), employees.get(1)};
+        Stream<Employee> stream1 = Arrays.stream(arr1);
+    }
+
+    /**
+     * 创建Stream方式三：通过Stream of()
+     */
+    @Test
+    public void test3() {
+        Stream<Integer> stream = Stream.of(1, 2, 3, 4, 5, 6);
+    }
+
+    /**
+     * 创建Stream方式四：创建无限流
+     */
+    @Test
+    public void test4() {
+        // 遍历前10个偶数
+        Stream.iterate(0, t -> t + 2).limit(10).forEach(System.out::println);
+        System.out.println("---------------------");
+        // 输出10个随机数
+        Stream.generate(Math::random).limit(10).forEach(System.out::println);
+    }
+}
+```
+
+
 
