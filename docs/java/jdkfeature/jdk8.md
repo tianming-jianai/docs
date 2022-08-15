@@ -29,8 +29,8 @@ next: /java/
 |    日期    | 课程编号 | 学习时长 |
 | :--------: | :------: | :------: |
 | 2022-08-13 |  P1~P10  |    2h    |
-| 2022-08-13 | P11~P13  |  40min   |
-|            |          |          |
+| 2022-08-14 | P11~P13  |  40min   |
+| 2022-08-15 | P14~P20  | 19:55 2h |
 
 - 复习
 
@@ -450,7 +450,7 @@ public void test4() {
 
 
 
-### 创建Stream（4种）
+### (一) Stream的创建操作（4种）
 
 #### 1. 通过集合
 
@@ -546,4 +546,210 @@ public class StreamAPITest {
 ```
 
 
+
+### (二) Stream的中间操作（3种）
+
+#### 1. 筛选与切片
+
+```java
+// filter(Predicate p) 接收Lambda，从流中排除某些元素
+// limit(n) 截断流，使其元素不超过给定数量
+// skip(n) 跳过元素，返回一个丢掉了前n个元素的流，若流中元素不足n个，则返回一个空流。与limit(n)互补
+// distinct() 筛选，通过流所生成元素的hashCode()和equals()去除重复元素
+```
+
+```java
+/**
+* 1. 筛选与切片
+*/
+@Test
+public void test1() {
+    // filter(Predicate p) 接收Lambda，从流中排除某些元素
+    list.stream().filter(e -> e.getSalary() > 7000).forEach(System.out::println);
+    System.out.println("-------------------");
+
+    // limit(n) 截断流，使其元素不超过给定数量
+    list.stream().limit(3).forEach(System.out::println);
+    System.out.println("-------------------");
+
+    // skip(n) 跳过元素，返回一个丢掉了前n个元素的流，若流中元素不足n个，则返回一个空流。与limit(n)互补
+    list.stream().skip(3).forEach(System.out::println);
+    System.out.println("-------------------");
+
+    // distinct() 筛选，通过流所生成元素的hashCode()和equals()去除重复元素
+    list.add(new Employee(1010, "zsg", 18, 20000));
+    list.add(new Employee(1010, "zsg", 18, 20000));
+    list.add(new Employee(1010, "zsg", 18, 20000));
+    list.stream().distinct().forEach(System.out::println);
+}
+```
+
+#### 2. 映射
+
+```java
+// map(Function f) 接收一个函数作为参数将元素换成其他形式或提取信息，该函数会被应用到每个元素上，并将其映射成一个新的元素。
+// flatMap(Function f) 接收一个函数作为参数，将流中的每个值都换成另一个流，将流中的每个值都换成另一个流，然后把所有流连接成一个流。
+```
+
+```java
+/**
+* 2. 映射
+*/
+@Test
+public void test2() {
+    // map(Function f) 接收一个函数作为参数将元素换成其他形式或提取信息，该函数会被应用到每个元素上，并将其映射成一个新的元素。
+    List<String> strings = Arrays.asList("aa", "bb", "cc", "dd", "ee");
+    strings.stream().map(e -> e.toUpperCase()).forEach(System.out::println);
+    list.stream().map(Employee::getName).filter(name -> name.length() > 3).forEach(System.out::println);
+    System.out.println("------------------");
+
+    // flatMap(Function f) 接收一个函数作为参数，将流中的每个值都换成另一个流，然后把所有流连接成一个流。
+    strings.stream().flatMap(StreamAPITest2::formatString).forEach(System.out::println);
+}
+
+private static Stream<Character> formatString(String s) {
+    ArrayList<Character> list = new ArrayList<>();
+    for (Character c : s.toCharArray()) {
+        list.add(c);
+    }
+    return list.stream();
+}
+```
+
+#### 3. 排序
+
+```java
+// sorted() 自然排序
+// sorted(Comparator comp) 定制排序
+```
+
+```java
+/**
+* 3. 排序
+*/
+@Test
+public void test3() {
+    // sorted() 自然排序
+    List<Integer> integers = Arrays.asList(12, 43, 65, 34, 87, 0, -98, 7);
+    integers.stream().sorted().forEach(System.out::println);
+    System.out.println("-------------------");
+
+    // sorted(Comparator comp) 定制排序
+    list.stream().sorted((e1, e2) -> {
+        int res = Integer.compare(e1.getAge(), e2.getAge());
+        if (res != 0) {
+            return res;
+        } else {
+            return Double.compare(e1.getSalary(), e2.getSalary());
+        }
+    }).forEach(System.out::println);
+}
+```
+
+### (三) Stream的终止操作（3种）
+
+#### 1. 匹配与查找
+
+```java
+// allMatch(Predicate p) 检查是否匹配素有元素
+// anyMatch(Predicate p) 检查是否至少匹配一个元素。
+// noneMatch(Predicate p) 检查是否没有匹配的元素。
+// findFirst() 返回第一个元素
+// findAny() 返回流中任意元素
+// count() 返回流中元素的总个数
+// max(Comparator c) 返回流中最大值
+// min(Comparator c) 返回流中最小值
+// foreach(Consumer c) 内部迭代
+// 
+```
+
+```java
+/**
+* 1. 匹配与查找
+*/
+@Test
+public void test1() {
+    // allMatch(Predicate p) 检查是否匹配素有元素
+    // 练习：是否所有员工的年龄都大于18
+    boolean allMatch = list.stream().allMatch(e -> e.getAge() > 18);
+    System.out.println("all > 18 : " + allMatch);
+
+    // anyMatch(Predicate p) 检查是否至少匹配一个元素。
+    // 练习：是否存在员工的工资大于10000
+    boolean anyMatch = list.stream().anyMatch(e -> e.getSalary() > 10000);
+    System.out.println("any salary > 10000 : " + anyMatch);
+
+    // noneMatch(Predicate p) 检查是否没有匹配的元素。
+    // 练习：是否存在员工姓“雷”
+    boolean noneMatch = list.stream().noneMatch(e -> e.getName().startsWith("雷"));
+    System.out.println("exists 雷 : " + noneMatch);
+
+    // findFirst() 返回第一个元素
+    Optional<Employee> first = list.stream().findFirst();
+    System.out.println(first);
+
+    // findAny() 返回流中任意元素
+    Optional<Employee> any = list.stream().findAny();
+    System.out.println(any);
+
+    // count() 返回流中元素的总个数
+    long count = list.stream().count();
+    System.out.println("count : " + count);
+
+    // max(Comparator c) 返回流中最大值
+    // 返回员工最大工资
+    Optional<Double> maxSalary = list.stream().map(e -> e.getSalary()).max(Double::compare);
+    System.out.println(maxSalary);
+
+    // min(Comparator c) 返回流中最小值
+    // 返回最低工资员工
+    Optional<Employee> max = list.stream().min((e1, e2) -> Double.compare(e1.getSalary(), e2.getSalary()));
+    System.out.println(max);
+
+    // foreach(Consumer c) 内部迭代
+    // 使用Collection接口需要用户去做迭代，成为外部迭代。相反，Stream API使用内部迭代——它帮你做了
+}
+```
+
+
+
+
+
+#### 2. 规约
+
+```java
+// reduce(T identity, BinaryOperator) 可以将流中元素反复结合起来，得到一个值。返回
+// reduce(BinaryOperator) 可以将流中元素反复结合起来，得到一个值。返回Optional<T>
+```
+
+```java
+/**
+* 2. 规约
+*/
+@Test
+public void test2() {
+    // reduce(T identity, BinaryOperator) 可以将流中元素反复结合起来，得到一个值。返回
+    // 练习1：计算1-10的自然数的和
+    List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+    Integer sum = integers.stream().reduce(0, Integer::sum);
+    System.out.println("sum: " + sum);
+
+    // reduce(BinaryOperator) 可以将流中元素反复结合起来，得到一个值。返回Optional<T>
+    // 练习2：计算所有员工工资的总和
+    Double sumSalary = list.stream().map(Employee::getSalary).reduce(0D, Double::sum);
+    System.out.println("sum salary : " + sumSalary);
+}
+```
+
+#### 3. 收集
+
+```java
+// collect(Collector c) 将流转转换为其他形式。接收一个Collector接口的实现，用于给Stream中元素做汇总的方法
+```
+
+Collector接口中方法的实现决定了如何对流执行收集的操作(如收集到List、Set、Map)。
+另外，Collectors 实用类提供了很多静态方法，可以方便地创建常见收集器实例，具体方法与实例如下表:
+
+```java
+```
 
