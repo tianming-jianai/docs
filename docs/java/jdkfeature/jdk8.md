@@ -751,5 +751,15 @@ Collector接口中方法的实现决定了如何对流执行收集的操作(如�
 另外，Collectors 实用类提供了很多静态方法，可以方便地创建常见收集器实例，具体方法与实例如下表:
 
 ```java
+/**
+* 3. 收集
+*/
+@Test
+public void test3(){
+    // collect(Collector c) 将流转转换为其他形式。接收一个Collector接口的实现，用于给Stream中元素做汇总的方法
+    // 练习：查找工资大于6000的员工，结果返回一个List或Set
+    List<Employee> employeeList = list.stream().filter(e -> e.getSalary() > 6000).collect(Collectors.toList());
+    Set<Employee> employeeSet = list.stream().filter(e -> e.getSalary() > 6000).collect(Collectors.toSet());
+}
 ```
 
